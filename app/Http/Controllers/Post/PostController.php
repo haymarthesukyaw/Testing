@@ -4,6 +4,13 @@ namespace App\Http\Controllers\Post;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Contracts\Services\Post\PostServiceInterface;
+use App\Services\Post\PostService;
+use Auth;
+use Validator;
+use App\Models\Post;
+use App\Models\User;
+use Illuminate\Support\Facades\Input;
 
 class PostController extends Controller
 {
@@ -12,19 +19,36 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    private $postService;
+
+    public function __construct(PostServiceInterface $post)
+    {
+        $this->postService = $post;
+    }
+
+    public function createForm()
+    {
+        return view('post.create');
+    }
+
+    public function editForm()
+    {
+        return view('post.edit');
+    }
     public function index()
     {
         //
-        // $auth_id = Auth::user()->id;
-        // $type    = Auth::user()->type;
-        // session()->forget([
-        //     'searchKeyword',
-        //     'title',
-        //     'desc'
-        // ]);
-        // $posts = $this->postService->getPost($auth_id, $type);
-        // return view('Post.postList', compact('posts'));
-        return view('postList');
+        $auth_id = Auth::user()->id;
+        $type    = Auth::user()->type;
+        session()->forget([
+            'searchKeyword',
+            'title',
+            'desc'
+        ]);
+        $posts = $this->postService->getPost($auth_id, $type);
+        return view('post.postList', compact('posts'));
+        // $posts=Post::all();
+        // return view('Post.index',compact('posts'));
     }
 
     /**
@@ -34,7 +58,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('post.createConfirm');
     }
 
     /**
@@ -45,7 +69,8 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Post::create($request->all());
+        // return redirect()->route('posts.index');
     }
 
     /**
@@ -67,7 +92,7 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+        return view('post.editConfirm',compact('id'));
     }
 
     /**

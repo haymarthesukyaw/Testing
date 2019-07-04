@@ -14,15 +14,13 @@
 Route::get('/', function () {
     return view('auth.login');
 });
-
 Auth::routes();
+Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/postList', 'Post/PostController@index')->name('postList');
+Route::get('/posts','Post\PostController@index');
 
-// Auth::routes();
-
-// Route::get('/home', 'HomeController@index')->name('home');
-
-// Auth::routes();
-
-// Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/post/create','Post\PostController@createForm');
+Route::post('/post/create','Post\PostController@create');
+// Route::post('/post/create','Post\PostController@store');
+Route::get('/post/edit','Post\PostController@editForm');
+Route::post('/post/edit','Post\PostController@edit');
