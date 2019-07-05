@@ -13,18 +13,20 @@
         <form action="/posts/search" method="GET" class="form-inline">
         @csrf
             <div class="form-group mb-2">
-                <input type="text" name="search" value="{{session('searchKeyword')}}" class="form-control form-control-lg mb-6 mr-4" placeholder="Search...">
-                <button type="submit" class="btn btn-primary btn-lg mb-6 mr-4">Search</button>
-                <a href="/post/create" class="btn btn-primary btn-lg mb-6 mr-4">Add</a>
-                <a href="/csv/upload" class="btn btn-primary btn-lg mb-6 mr-4">Upload</a>
-                <a href="/download" class="btn btn-primary btn-lg mb-6 mr-4">Download</a>
+            <div class="pb-4">
+                <input type="text" name="search" value="{{session('searchKeyword')}}" class="form-control form-control-md mb-6 mr-4" placeholder="Search...">
+                <button type="submit" class="btn btn-primary btn-md mb-6 mr-4">Search</button>
+                <a href="/post/create" class="btn btn-primary btn-md mb-6 mr-4">Add</a>
+                <a href="/csv/upload" class="btn btn-primary btn-md mb-6 mr-4">Upload</a>
+                <a href="/download" class="btn btn-primary btn-md mb-6 mr-4">Download</a>
+            </div>
             </div>
         </form>
     </div>
 
-    <div class="container-fluid">
-        <table class="table table-bordered text-center">
-        <thead>
+    <div class="container">
+        <table class="table table-md table-bordered text-center">
+        <thead class="thead-light">
             <tr>
                 <th scope="col">Post Title</th>
                 <th scope="col">Post Description</th>
@@ -36,7 +38,7 @@
         </thead>
         <tbody>
             <tr>
-                    <td>Title</td>
+                    <td><button class="btn btn-link" data-toggle="modal" data-target="#title">Title</button></td>
                     <td>Description</td>
                     <td>User</td>
                     <td>date</td>
@@ -71,4 +73,23 @@
         </table>
     </div>
 </div>
+
+<div class="modal fade" id="title" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document" >
+      <div class="modal-content">
+        <div class="modal-header">
+            <h4 class="modal-title">Modal Header</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>This is a small modal.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 @endsection

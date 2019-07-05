@@ -1,7 +1,7 @@
 @extends('layouts.layout')
 
 @section('content')
-<div id="createPost">
+<div id="editPost">
     <div class="row mb-3">
         <div class="col-md-3"></div>
         <div class="col-md-16">
@@ -10,11 +10,10 @@
     </div>
 
     <div class="row">
-    <!-- <div class="col-md-1"></div> -->
         <div class="col-md-4 mx-auto">
-            <form action="/post/edit" method="POST">
+            <form action="" method="POST">
             @csrf
-
+            @method('PUT')
                 <div class="form-group">
                     <label for="title">Title</label>
                     <input type="text" id="title" name="title" class="form-control" value="{{old('title', session('title'))}}">
@@ -42,7 +41,7 @@
                 <div class="form-group">
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary mr-4">Confirm</button>
-                        <button type="reset" class="btn btn-white">Clear</button>
+                        <button type="reset" class="btn btn-dark">Clear</button>
                     </div>
                 </div>
             </form>

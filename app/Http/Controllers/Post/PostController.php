@@ -31,22 +31,17 @@ class PostController extends Controller
         return view('post.create');
     }
 
-    public function editForm()
-    {
-        return view('post.edit');
-    }
     public function index()
     {
-        //
-        $auth_id = Auth::user()->id;
-        $type    = Auth::user()->type;
-        session()->forget([
-            'searchKeyword',
-            'title',
-            'desc'
-        ]);
-        $posts = $this->postService->getPost($auth_id, $type);
-        return view('post.postList', compact('posts'));
+        // $auth_id = Auth::user()->id;
+        // $type    = Auth::user()->type;
+        // session()->forget([
+        //     'searchKeyword',
+        //     'title',
+        //     'desc'
+        // ]);
+        // $posts = $this->postService->getPost($auth_id, $type);
+        return view('post.postList');
         // $posts=Post::all();
         // return view('Post.index',compact('posts'));
     }
@@ -70,7 +65,7 @@ class PostController extends Controller
     public function store(Request $request)
     {
         // Post::create($request->all());
-        // return redirect()->route('posts.index');
+        return view('post.postList');
     }
 
     /**
@@ -92,9 +87,15 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        return view('post.editConfirm',compact('id'));
+        // return view('post.edit');
+        return view('post.edit');
     }
 
+    public function editConfirm(Request $request, $id)
+    {
+        return view('post.update');
+
+    }
     /**
      * Update the specified resource in storage.
      *
@@ -104,7 +105,7 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return view('post.postList');
     }
 
     /**
