@@ -2,9 +2,9 @@
 
 @section('content')
 <div id="createPostConfirm">
-    <div class="row mb-6">
-        <div class="col-md-3"></div>
-        <div class="col-md-16">
+    <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col">
             <h5>Create Post Confirmation</h5>
         </div>
     </div>
@@ -14,28 +14,22 @@
             <form action="/post/create" method="POST">
                 @csrf
 
-                <div class="form-group">
-                <div class="m-3 pb-3">
-                    <label class="control-label col-sm-2" for="email">Title:</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="title">
-                    </div>
-                </div>
+                <div class="form-group row">
+                    <label for="title" class="col-md-4">Title:</label>
+                    <label class="col-md-6">This is title</label>
+                    <input type="hidden" name="title">
                 </div>
 
-                <div class="form-group">
-                <div class="m-3 pb-3">
-                    <label class="control-label col-sm-2" for="email">Description:</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="title">
-                    </div>
-                </div>
+                <div class="form-group row">
+                    <label for="description" class="col-md-4">Description:</label>
+                    <label class="col-md-6">This is description</label>
+                    <input type="hidden" name="description">
                 </div>
 
                 <div class="form-group">
                 <div class="col-md-10">
                     <div class="text-center">
-                        <button type="submit" class="btn btn-primary  mr-4">Create</button>
+                        <button type="submit" class="btn btn-primary mr-4">Create</button>
                         <a href="" class="btn btn-dark">Cancel</a>
                     </div>
                 </div>

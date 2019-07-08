@@ -2,35 +2,33 @@
 
 @section('content')
 <div id="editPostConfirm">
-    <div class="row mb-6">
-        <div class="col-md-3"></div>
-        <div class="col-md-16">
-            <h3>Edit Post Confirm</h3>
+    <div class="row mb-3">
+        <div class="col-md-1"></div>
+        <div class="col">
+            <h5>Update Post Confirm</h5>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-md-5 mx-auto">
+        <div class="col-md-6 mx-auto">
             <form action="" method="POST">
                 @csrf
-                <div class="form-group">
-                    <label class="control-label col-sm-2" for="email">Title:</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="title">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label col-sm-2" for="email">Description:</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="title">
-                    </div>
+                <div class="form-group row">
+                    <label class="control-label col-md-4" for="title">Title:</label>
+                    <label class="col-md-6">This is title</label>
+                    <input type="hidden" class="form-control col-md-6" id="title" value="Title">
                 </div>
 
                 <div class="form-group row">
-                    <label for="status" class="col-2 form-check-label">Status</label>
-                    <div class="col-4">
-                        <input type="checkbox" id="status" class="form-check-input">
+                    <label class="control-label col-md-4" for="description">Description:</label>
+                    <label class="col-md-6">This is description</label>
+                    <input type="hidden" class="form-control col-md-6" id="description" value="description">
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-4 form-check-label" for="status">Status</label>
+                    <div class="col">
+                        <input type="checkbox" id="status" class="form-check-input col-md-1">
                     </div>
                 </div>
 

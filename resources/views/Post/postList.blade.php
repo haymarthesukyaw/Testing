@@ -3,8 +3,8 @@
 @section('content')
 <div id="postList">
     <div class="row mb-3">
-        <div class="col-md-3"></div>
-        <div class="col-md-16">
+        <div class="col-md-1"></div>
+        <div class="col">
             <h5>Post List</h5>
         </div>
     </div>
