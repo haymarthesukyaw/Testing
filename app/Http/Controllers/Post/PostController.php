@@ -31,6 +31,14 @@ class PostController extends Controller
         return view('post.create');
     }
 
+    public function showUploadForm()
+    {
+        return view('post.upload');
+    }
+    public function import()
+    {
+        return view('post.postList');
+    }
     public function index()
     {
         // $auth_id = Auth::user()->id;

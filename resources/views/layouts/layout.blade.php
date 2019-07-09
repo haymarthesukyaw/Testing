@@ -98,17 +98,20 @@
                         @else -->
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
-                            @if(Auth::check())
+                            <!-- @if(Auth::check()) -->
                             <!-- <ul class="navbar-nav mr-auto"> -->
-                                @if(Auth::user()->type == '0')
+                                <!-- @if(Auth::user()->type == '0') -->
                                     <li class="nav-item">
                                         <a class="nav-link" href="/users">Users</a>
                                     </li>
-                                @else
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="/users">User</a>
+                                <!-- @else -->
+                                    <!-- <li class="nav-item">
+                                        <a class="nav-link" href="/user">User</a>
+                                    </li> -->
+                                <!-- @endif -->
+                                <li class="nav-item">
+                                        <a class="nav-link" href="{{url('/profile')}}">User</a>
                                     </li>
-                                @endif
                                 <li class="nav-item">
                                     <a class="nav-link" href="/posts">Posts</a>
                                 </li>

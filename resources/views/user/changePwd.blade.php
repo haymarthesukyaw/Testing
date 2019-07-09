@@ -11,7 +11,7 @@
 
     <div class="row">
         <div class="col-md-6 mx-auto">
-            <form action="/changePwd" method="POST" enctype="multipart/form-data">
+            <form action="" method="POST" enctype="multipart/form-data">
             @csrf
                 <div class="form-group row">
                     <label for="old_password" class="col-md-4">Old password</label>

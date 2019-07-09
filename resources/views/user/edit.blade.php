@@ -73,7 +73,8 @@
                     @endif
                 </div>
                 <div class="form-group row">
-                    <a href="/user/changePwd">Change Password</a>
+                    <!-- <a href="{{route('password',['id' => 1])}}" class="btn btn-link form-control col-md-3">Change Password</a> -->
+                    <a href="{{url('/changePwd')}}" class="btn btn-link form-control col-md-3">Change Password</a>
                 </div>
                 <div class="form-group">
                     <div class="text-center">

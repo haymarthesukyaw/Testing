@@ -15,7 +15,9 @@ Route::get('/', function () {
     return view('auth.login');
 });
 Auth::routes();
-Route::get('/home', 'HomeController@index')->name('home');
+// Route::get('/home', 'HomeController@index')->name('home');
+Route::post('/user/login', 'User\UserController@login')->name('login');
+Route::get('/user/logout','User\UserController@logout');
 
 //Post List
 Route::get('/posts','Post\PostController@index')->name('posts.index');
@@ -29,15 +31,23 @@ Route::put('/post/{id}', 'Post\PostController@editConfirm')->name('posts.edit');
 Route::post('/post/{id}','Post\PostController@update');
 
 //User
-Route::get('/users','User\UserController@index')->name('users.index');
+Route::get('/users','User\UserController@index')->name('index');
 //User Create
 Route::get('/user/create','User\UserController@createForm');
 Route::put('/user/create','User\UserController@create');
 Route::post('/user/create','User\UserController@store');
 //User Update
-Route::get('/user/{id}','User\UserController@edit');
+Route::get('/user/{id}','User\UserController@edit')->name('edit');
 Route::put('/user/{id}','User\UserController@editConfirm');
 Route::post('/user/{id}','User\UserController@update');
 
-Route::get('/changePwd/{id}','User\UserController@changePwdForm')->name('users.pwd');
-Route::post('/changePwd/{id}','User\UserController@changePwd');
+//Change Password
+Route::get('/changePwd','User\UserController@changePwdForm')->name('password');
+Route::post('/changePwd','User\UserController@changePassword');
+
+//Show Profile
+Route::get('/profile', 'User\UserController@showProfile')->name('profile');
+Route::post('/profile','User\UserController@showProfileEdit');
+//Upload CSV
+Route::get('/csv/upload', 'Post\PostController@showUploadForm');
+Route::post('/csv/upload', 'Post\PostController@import');

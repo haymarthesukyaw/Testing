@@ -17,7 +17,7 @@
                 <input type="text" name="search" value="{{session('searchKeyword')}}" class="form-control form-control-md mb-6 mr-4" placeholder="Search...">
                 <button type="submit" class="btn btn-primary btn-md mb-6 mr-4">Search</button>
                 <a href="/post/create" class="btn btn-primary btn-md mb-6 mr-4">Add</a>
-                <a href="/csv/upload" class="btn btn-primary btn-md mb-6 mr-4">Upload</a>
+                <a href="{{url('/csv/upload')}}" class="btn btn-primary btn-md mb-6 mr-4">Upload</a>
                 <a href="/download" class="btn btn-primary btn-md mb-6 mr-4">Download</a>
             </div>
             </div>

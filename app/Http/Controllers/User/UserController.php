@@ -21,7 +21,33 @@ class UserController extends Controller
     // {
     //     $this->userService = $user;
     // }
+    public function login(Request $request)
+    {
+        $email      =   $request->email;
+        $pwd        =   $request->password;
+        $validator  =   Validator::make($request->all(), [
+            'email'     =>  'required|email',
+            'password'  =>  'required|min:8|regex:/^(?=.*?[0-9]).{8,}$/'
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+        if (Auth::guard('')->attempt(['email' => $email, 'password' => $pwd, 'deleted_at' => null])) {
+            return redirect()->intended('/posts');
+        } else {
+            return redirect()->back()
+                        ->with('incorrect', 'Email or password incorrect!')
+                        ->withInput();
+        }
+    }
 
+    public function logout()
+    {
+        Auth::logout();
+        return redirect('/');
+    }
     /**
      * Show user registrarrion form.
      */
@@ -78,11 +104,14 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function showProfile($user_id)
+    public function showProfile()
     {
-
+        return view('user.userProfile');
     }
-
+    public function showProfileEdit()
+    {
+        return view('user.edit');
+    }
     /**
      * Show the form for editing the specified resource.
      *
@@ -124,21 +153,21 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function changePwdForm($user_id)
+    public function changePwdForm()
     {
         return view('user.changePwd');
     }
 
     /**
      * Change password the specified resource in storage.
-     *
+     *Request $request, $user_id
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function changePwd(Request $request, $user_id)
+    public function changePassword()
     {
-
+        return view('user.userList');
     }
 
     /**
