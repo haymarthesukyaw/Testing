@@ -37,9 +37,10 @@ class UserController extends Controller
         if (Auth::guard('')->attempt(['email' => $email, 'password' => $pwd, 'deleted_at' => null])) {
             return redirect()->intended('/posts');
         } else {
-            return redirect()->back()
-                        ->with('incorrect', 'Email or password incorrect!')
-                        ->withInput();
+            // return redirect()->back()
+            //             ->with('incorrect', 'Email or password incorrect!')
+            //             ->withInput();
+            return redirect()->back()->with('flash_message_error','Invalid user name or password!');
         }
     }
 

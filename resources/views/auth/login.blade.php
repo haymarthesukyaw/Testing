@@ -8,6 +8,12 @@
                 <div class="card-header">{{ __('Login Form') }}</div>
 
                 <div class="card-body">
+                @if(Session::has('flash_message_error'))
+                    <div class="alert alert-success alert-block">
+                        <button type="button" class="close" data-dismiss="alert">x</button>
+                            <strong>{!! session('flash_message_error') !!}</strong>
+                    </div>
+                @endif
                     <form method="POST" action="/user/login">
                         @csrf
                         <div class="form-group row">
