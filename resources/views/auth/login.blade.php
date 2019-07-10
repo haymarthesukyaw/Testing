@@ -8,10 +8,20 @@
                 <div class="card-header">{{ __('Login Form') }}</div>
 
                 <div class="card-body">
-                @if(Session::has('flash_message_error'))
+                @if($errors->any())
+                    <div class="alert alert-success alert-block">
+                    <button type="button" class="close" data-dismiss="alert">x</button>
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+                @if(Session::has('incorrect'))
                     <div class="alert alert-success alert-block">
                         <button type="button" class="close" data-dismiss="alert">x</button>
-                            <strong>{!! session('flash_message_error') !!}</strong>
+                            <strong>{!! session('incorrect') !!}</strong>
                     </div>
                 @endif
                     <form method="POST" action="/user/login">
@@ -20,7 +30,7 @@
                             <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('Email') }}</label>
 
                             <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}">
 
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
@@ -34,7 +44,7 @@
                             <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
 
                             <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password">
 
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">

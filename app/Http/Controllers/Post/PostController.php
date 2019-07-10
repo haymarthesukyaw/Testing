@@ -41,17 +41,7 @@ class PostController extends Controller
     }
     public function index()
     {
-        // $auth_id = Auth::user()->id;
-        // $type    = Auth::user()->type;
-        // session()->forget([
-        //     'searchKeyword',
-        //     'title',
-        //     'desc'
-        // ]);
-        // $posts = $this->postService->getPost($auth_id, $type);
         return view('post.postList');
-        // $posts=Post::all();
-        // return view('Post.index',compact('posts'));
     }
 
     /**
@@ -59,8 +49,23 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        // $validator = Validator::make($request->all(), [
+        //     'title' =>  'required|max:255|unique:posts,title',
+        //     'desc'  =>  'required'
+        // ]);
+        // if ($validator->fails()) {
+        //     return redirect()->back()
+        //                 ->withErrors($validator)
+        //                 ->withInput();
+        // }
+        // $title  =  $request->title;
+        // $desc   =  $request->desc;
+        // session([
+        //     'title' => $title,
+        //     'desc'  => $description
+        // ]);
         return view('post.createConfirm');
     }
 

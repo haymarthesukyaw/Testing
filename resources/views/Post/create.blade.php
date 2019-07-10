@@ -30,9 +30,9 @@
                     @endif
                 </div>
 
-                <input type="hidden" name="create_user_id" value="{{Auth::user()->id}}">
+                <!-- <input type="hidden" name="create_user_id" value="{{Auth::user()->id}}">
                 <input type="hidden" name="updated_user_id" value="{{Auth::user()->id}}">
-                <input type="hidden" name="deleted_user_id" value="{{Auth::user()->id}}">
+                <input type="hidden" name="deleted_user_id" value="{{Auth::user()->id}}"> -->
 
                 <div class="form-group">
                     <div class="text-center">

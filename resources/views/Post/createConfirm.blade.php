@@ -16,13 +16,13 @@
 
                 <div class="form-group row">
                     <label for="title" class="col-md-4">Title:</label>
-                    <label class="col-md-6">This is title</label>
+                    <label class="col-md-6">title</label>
                     <input type="hidden" name="title">
                 </div>
 
                 <div class="form-group row">
                     <label for="description" class="col-md-4">Description:</label>
-                    <label class="col-md-6">This is description</label>
+                    <label class="col-md-6">desc</label>
                     <input type="hidden" name="description">
                 </div>
 
