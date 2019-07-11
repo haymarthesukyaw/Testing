@@ -11,6 +11,7 @@ use Validator;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Input;
+use DB;
 
 class PostController extends Controller
 {
@@ -41,7 +42,15 @@ class PostController extends Controller
     }
     public function index()
     {
-        return view('post.postList');
+        $auth_id = Auth::user()->id;
+        $type    = Auth::user()->type;
+        session()->forget([
+            'searchKeyword',
+            'title',
+            'desc'
+        ]);
+        $posts = $this->postService->getPost($auth_id, $type);
+        return view('post.postList',compact('posts'));
     }
 
     /**
@@ -51,22 +60,22 @@ class PostController extends Controller
      */
     public function create(Request $request)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'title' =>  'required|max:255|unique:posts,title',
-        //     'desc'  =>  'required'
-        // ]);
-        // if ($validator->fails()) {
-        //     return redirect()->back()
-        //                 ->withErrors($validator)
-        //                 ->withInput();
-        // }
-        // $title  =  $request->title;
-        // $desc   =  $request->desc;
-        // session([
-        //     'title' => $title,
-        //     'desc'  => $description
-        // ]);
-        return view('post.createConfirm');
+        $validator = Validator::make($request->all(), [
+            'title' =>  'required|max:255|unique:posts,title',
+            'desc'  =>  'required'
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+        $title  =  $request->title;
+        $desc   =  $request->desc;
+        session([
+            'title' => $title,
+            'desc'  => $desc
+        ]);
+        return view('post.createConfirm',compact('title','desc'));
     }
 
     /**
@@ -77,10 +86,31 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        // Post::create($request->all());
-        return view('post.postList');
+        $auth_id =  Auth::user()->id;
+        $post    =  new Post;
+        $post->title = $request->title;
+        $post->desc  = $request->desc;
+        $posts   =  $this->postService->store($auth_id, $post);
+        return view('post.postList',compact('posts'))->withSuccess('Post create successfully.');
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+        $auth_id   = Auth::user()->id;
+        $auth_type = Auth::user()->type;
+        $search_keyword = $request->search;
+        $posts     = $this->postService->searchPost($search_keyword, $auth_id, $auth_type);
+        session ([
+            'searchKeyword' => $search_keyword
+        ]);
+        return view('post.postlist', compact('posts'));
+    }
     /**
      * Display the specified resource.
      *
@@ -127,8 +157,17 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        $post_id = $request->post_id;
+        $auth_id = Auth::user()->id;
+        dd($post_id);
+        // $delete_post = $this->postService->softDelete($auth_id, $post_id);
+        // return redirect()->route('posts.index')->with('success', 'Post delete successfully.');
+
     }
+    // public function export()
+    // {
+    //     return Excel::download(new PostsExport, 'posts.xlsx');
+    // }
 }

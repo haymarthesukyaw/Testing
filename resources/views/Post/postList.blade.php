@@ -37,40 +37,22 @@
             </tr>
         </thead>
         <tbody>
+            @foreach($posts as $key => $post)
             <tr>
-                    <td><button class="btn btn-link" data-toggle="modal" data-target="#title">Title</button></td>
-                    <td>Description</td>
-                    <td>User</td>
-                    <td>date</td>
+                    <td><button class="btn btn-link" data-toggle="modal" data-target="#title">{{$post->title}}</button></td>
+                    <td>{{$post->description}}</td>
+                    <td>{{$post->user->name}}</td>
+                    <td>{{$post->created_at->format('d-m-y')}}</td>
                     <td><a href="/post/edit">edit</a></td>
-                    <td>delete</td>
+                    <td><a href="#deleteConfirmModal" class="btn btn-danger postDelete" onclick="deleteData({{$post->id}})"
+                           data-toggle="modal">Delete</a></td>
             </tr>
-            <tr>
-                    <td>Title</td>
-                    <td>Description</td>
-                    <td>User</td>
-                    <td>date</td>
-                    <td>edit</td>
-                    <td>delete</td>
-            </tr>
-            <tr>
-                    <td>Title</td>
-                    <td>Description</td>
-                    <td>User</td>
-                    <td>date</td>
-                    <td>edit</td>
-                    <td>delete</td>
-            </tr>
-            <tr>
-                    <td>Title</td>
-                    <td>Description</td>
-                    <td>User</td>
-                    <td>date</td>
-                    <td>edit</td>
-                    <td>delete</td>
-            </tr>
+            @endforeach
         </tbody>
         </table>
+        <ul class="pagination col-md-12 justify-content-center">
+            {{$posts->links()}}
+        </ul>
     </div>
 </div>
 
@@ -92,4 +74,47 @@
   </div>
 </div>
 
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{route('delete')}}" method="POST">
+                @csrf
+                @method('DELETE')
+                <div class="modal-body">
+                    <p>Are you sure want to delete this post?</p>
+                    <input type="hidden" id="post_id" name="post_id" value=>
+                </div>
+                <div class="modal-footer">
+                <!-- <form action="{{route('delete')}}" method="POST">
+                    @csrf
+                    @method('DELETE') -->
+                    <!-- <input type="hidden" id="post_id" name="post_id" value=""> -->
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-danger" type="submit">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function deleteData(id)
+    {
+        var id = id;
+        var url = '{{ route("delete", ":id") }}';
+        url = url.replace(':id', id);
+        $("#deleteConfirmModal").attr('action', url);
+    }
+
+    function formSubmit()
+    {
+        $("#deleteConfirmModal").submit();
+    }
+</script>
 @endsection

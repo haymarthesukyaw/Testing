@@ -16,17 +16,17 @@
             @method('PUT')
                 <div class="form-group row">
                     <label for="title" class="col-md-4">Title:</label>
-                    <input type="text" id="title" name="title" class="form-control col-md-6">
+                    <input type="text" id="title" name="title" class="form-control col-md-6" value="{{old('title', session('title'))}}">
                     @if ($errors->has('title'))
                         <label class="text-danger mt-2 mb-0">{{ $errors->first('title') }}</label>
                     @endif
                 </div>
 
                 <div class="form-group row">
-                    <label for="description" class="col-md-4">Description:</label>
-                    <textarea name="description" id="description" class="form-control col-md-6"></textarea>
-                    @if ($errors->has('description'))
-                        <label class="text-danger mt-2 mb-0">{{ $errors->first('description') }}</label>
+                    <label for="desc" class="col-md-4">Description:</label>
+                    <textarea name="desc" id="desc" class="form-control col-md-6">{{old('desc', session('desc'))}}</textarea>
+                    @if ($errors->has('desc'))
+                        <label class="text-danger mt-2 mb-0">{{ $errors->first('desc') }}</label>
                     @endif
                 </div>
 

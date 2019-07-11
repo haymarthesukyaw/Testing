@@ -51,3 +51,8 @@ Route::post('/profile','User\UserController@showProfileEdit');
 //Upload CSV
 Route::get('/csv/upload', 'Post\PostController@showUploadForm');
 Route::post('/csv/upload', 'Post\PostController@import');
+
+//Search
+Route::get('/posts/search', 'Post\PostController@search');
+
+Route::Delete('/delete', 'Post\PostController@destroy')->name('delete');

@@ -16,14 +16,14 @@
 
                 <div class="form-group row">
                     <label for="title" class="col-md-4">Title:</label>
-                    <label class="col-md-6">title</label>
-                    <input type="hidden" name="title">
+                    <label class="col-md-6">{{$title}}</label>
+                    <input type="hidden" name="title" value="{{$title}}">
                 </div>
 
                 <div class="form-group row">
-                    <label for="description" class="col-md-4">Description:</label>
-                    <label class="col-md-6">desc</label>
-                    <input type="hidden" name="description">
+                    <label for="desc" class="col-md-4">Description:</label>
+                    <label class="col-md-6">{{$desc}}</label>
+                    <input type="hidden" name="desc" value="{{$desc}}">
                 </div>
 
                 <div class="form-group">
