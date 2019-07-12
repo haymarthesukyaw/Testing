@@ -28,7 +28,7 @@ Route::post('/post/create','Post\PostController@store');
 //Post Update
 Route::get('/post/{id}','Post\PostController@edit');
 Route::put('/post/{id}', 'Post\PostController@editConfirm')->name('posts.edit');
-Route::post('/post/{id}','Post\PostController@update');
+Route::post('/post/{id}','Post\PostController@update')->name('posts.update');
 
 //User
 Route::get('/users','User\UserController@index')->name('index');
@@ -55,4 +55,6 @@ Route::post('/csv/upload', 'Post\PostController@import');
 //Search
 Route::get('/posts/search', 'Post\PostController@search');
 
-Route::Delete('/delete', 'Post\PostController@destroy')->name('delete');
+Route::post('/delete', 'Post\PostController@destroy')->name('delete');
+
+Route::get('/post/show/{id}', 'Post\PostController@show');

@@ -11,24 +11,25 @@
 
     <div class="row">
         <div class="col-md-6 mx-auto">
-            <form action="" method="POST">
+            <form action="{{route('posts.update',$id)}}" method="POST">
                 @csrf
+
                 <div class="form-group row">
                     <label class="control-label col-md-4" for="title">Title:</label>
-                    <label class="col-md-6">This is title</label>
-                    <input type="hidden" class="form-control col-md-6" id="title" value="Title">
+                    <label class="col-md-6">{{$title}}</label>
+                    <input type="hidden" class="form-control col-md-6" name="title" id="title" value="{{$title}}">
                 </div>
 
                 <div class="form-group row">
                     <label class="control-label col-md-4" for="description">Description:</label>
-                    <label class="col-md-6">This is description</label>
-                    <input type="hidden" class="form-control col-md-6" id="description" value="description">
+                    <label class="col-md-6">{{$desc}}</label>
+                    <input type="hidden" class="form-control col-md-6" name="desc" id="description" value="{{$desc}}">
                 </div>
 
                 <div class="form-group row">
                     <label class="col-md-4 form-check-label" for="status">Status</label>
                     <div class="col">
-                        <input type="checkbox" id="status" class="form-check-input col-md-1">
+                        <input type="checkbox" id="status" name="status" class="form-check-input col-md-1" value="1">
                     </div>
                 </div>
 

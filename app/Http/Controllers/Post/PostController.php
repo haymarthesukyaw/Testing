@@ -117,9 +117,18 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($post_id)
     {
-        //
+        $post = Post::findOrFail($post_id);
+        $title=$post->title;
+        $desc=$post->description;
+        // $user = User::where('id', '=', $post->create_user_id)
+        //     ->select('name')
+        //     ->first();
+        // return response()->json(['post' => $post]);
+        // return view('post.postList',compact('title','desc'));
+        return view('post.postList')->with('post', json_decode($post, true));
+        // return json_decode($post, true);
     }
 
     /**
@@ -130,13 +139,28 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        // return view('post.edit');
-        return view('post.edit');
+        $post = $this->postService->postDetail($id);
+        return view('post.edit',compact('post'));
     }
 
     public function editConfirm(Request $request, $id)
     {
-        return view('post.update');
+        $post   =   Post::find($id);
+        $title  =   $request->title;
+        $desc   =   $request->desc;
+        $validator  = Validator::make($request->all(), [
+            'title' =>  'required|max:255|unique:posts,title,' . $post->id,
+            'desc'  =>  'required'
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+        // dd($title);
+        // dd($desc);
+        // dd($id);
+        return view('post.update',compact('title','desc','id'));
 
     }
     /**
@@ -148,7 +172,14 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return view('post.postList');
+        $user_id  =  Auth::user()->id;
+        $post     =  new Post;
+        $post->id     =  $id;
+        $post->title  =  $request->title;
+        $post->desc   =  $request->desc;
+        $posts    =  $this->postService->update($user_id, $post);
+        // return view('post.postList', compact('posts'))->withSuccess('Post update successfully.');
+        return redirect()->route('posts.index',compact('posts'))->withSuccess('Post update successfully.');
     }
 
     /**
@@ -161,9 +192,9 @@ class PostController extends Controller
     {
         $post_id = $request->post_id;
         $auth_id = Auth::user()->id;
-        dd($post_id);
-        // $delete_post = $this->postService->softDelete($auth_id, $post_id);
-        // return redirect()->route('posts.index')->with('success', 'Post delete successfully.');
+        $delete_post=$this->postService->softDelete($auth_id, $post_id);
+        // dd($delete_post);
+        return redirect()->route('posts.index');
 
     }
     // public function export()

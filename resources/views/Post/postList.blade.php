@@ -39,11 +39,11 @@
         <tbody>
             @foreach($posts as $key => $post)
             <tr>
-                    <td><button class="btn btn-link" data-toggle="modal" data-target="#title">{{$post->title}}</button></td>
+                    <td><a href="#" class="show-modal btn btn-link" data-toggle="modal" data-target="#show" data-id="{{$post->id}}" data-title="{{$post->title}}" data-body="{{$post->description}}">{{$post->title}}</button></td>
                     <td>{{$post->description}}</td>
                     <td>{{$post->user->name}}</td>
                     <td>{{$post->created_at->format('d-m-y')}}</td>
-                    <td><a href="/post/edit">edit</a></td>
+                    <td><a href="/post/{{$post->id}}">edit</a></td>
                     <td><a href="#deleteConfirmModal" class="btn btn-danger postDelete" onclick="deleteData({{$post->id}})"
                            data-toggle="modal">Delete</a></td>
             </tr>
@@ -56,15 +56,15 @@
     </div>
 </div>
 
-<div class="modal fade" id="title" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="show" role="dialog">
     <div class="modal-dialog" role="document" >
       <div class="modal-content">
         <div class="modal-header">
-            <h4 class="modal-title">Modal Header</h4>
+            <h4 class="modal-title" id="post-title">{{$post->title}}</h4>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <div class="modal-body">
-          <p>This is a small modal.</p>
+          {{$post->description}}
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -83,7 +83,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{route('delete')}}" method="POST">
+            <form action="/posts" method="POST" class="deleteForm">
                 @csrf
                 @method('DELETE')
                 <div class="modal-body">
@@ -91,10 +91,6 @@
                     <input type="hidden" id="post_id" name="post_id" value=>
                 </div>
                 <div class="modal-footer">
-                <!-- <form action="{{route('delete')}}" method="POST">
-                    @csrf
-                    @method('DELETE') -->
-                    <!-- <input type="hidden" id="post_id" name="post_id" value=""> -->
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     <button class="btn btn-danger" type="submit">Delete</button>
                 </div>
@@ -103,18 +99,26 @@
     </div>
 </div>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src= https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js></script>
 <script type="text/javascript">
+    $(document).on('click','.show-modal',function(){
+        $('#show').modal('show');
+        $('.modal-title').text('show-post');
+    });
+</script>
+<!-- <script type="text/javascript">
     function deleteData(id)
     {
         var id = id;
-        var url = '{{ route("delete", ":id") }}';
-        url = url.replace(':id', id);
-        $("#deleteConfirmModal").attr('action', url);
+        var url = "/posts/"+id;
+        console.log(url);
+        $(".deleteForm").attr('action', url);
     }
 
     function formSubmit()
     {
         $("#deleteConfirmModal").submit();
     }
-</script>
+</script>-->
 @endsection

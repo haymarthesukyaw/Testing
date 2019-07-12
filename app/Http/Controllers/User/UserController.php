@@ -15,12 +15,12 @@ use File;
 
 class UserController extends Controller
 {
-    // private $userService;
+    private $userService;
 
-    // public function __construct(UserServiceInterface $user)
-    // {
-    //     $this->userService = $user;
-    // }
+    public function __construct(UserServiceInterface $user)
+    {
+        $this->userService = $user;
+    }
     public function login(Request $request)
     {
         $email      =   $request->email;
@@ -73,7 +73,49 @@ class UserController extends Controller
      */
     public function create(Request $request)
     {
-        return view('user.createConfirm');
+        $validator = Validator::make($request->all(), [
+            'user_name'  =>  'required',
+            'email'     =>  'required|email|unique:users,email',
+            'password'  =>  'required|min:8|confirmed|regex:/^(?=.*?[0-9]).{8,}$/',
+            'password_confirmation' => 'required|min:8|regex:/^(?=.*?[0-9]).{8,}$/',
+            'phone'     =>  'required|numeric|digits_between:6,20',
+            'address'   =>  'max:255',
+            'profileImg'   =>  'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+        $name    =  $request->user_name;
+        $email   =  $request->email;
+        $pwd     =  $request->password;
+        $type    =  $request->type;
+        $phone   =  $request->phone;
+        $dob     =  $request->dob;
+        $address =  $request->address;
+        $profile_img = $request->file('profileImg');
+
+        //password show as ***
+        $hide = "*";
+        $pwd_hide = str_pad($hide, strlen($pwd), "*");
+        //tempory save profile photo
+        $filename = "";
+        if ($profile_img) {
+            $filename = $profile_img->getClientOriginalName();
+            $profile_img->move('img/tempProfile', $filename);
+        }
+        session ([
+            'name'  => $name,
+            'email' => $email,
+            'type'  => $type,
+            'phone' => $phone,
+            'dob'   => $dob,
+            'address' => $address
+        ]);
+        return view('user.createConfirm', compact(
+            'name', 'email','pwd', 'type', 'phone', 'dob', 'address', 'pwd_hide', 'filename'
+        ));
     }
 
     /**
@@ -84,6 +126,31 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $auth_id    =  Auth::user()->id;
+        //save profile image
+        $filename  =  $request->filename;
+        if ($filename) {
+            $oldpath    =  public_path() . '/img/tempProfile/' . $filename;
+            $newpath    =  public_path() . '/img/profile/' . $filename;
+            File::move($oldpath, $newpath);
+            $profile    =  '/img/profile/' . $filename;
+        } else {
+            $profile    =  '';
+        }
+        $user_type      =  $request->type;
+        if ($user_type == null) {
+            $user_type = '1';
+        }
+        $user           =  new User;
+        $user->name     =  $request->user_name;
+        $user->email    =  $request->email;
+        $user->password =  Hash::make($request->password);
+        $user->type     =  $user_type;
+        $user->phone    =  $request->phone;
+        $user->dob      =  $request->dob;
+        $user->address  =  $request->address;
+        $user->profile  =  $profile;
+        $insert_user  =  $this->userService->store($auth_id, $user);
         return view('user.userList');
     }
 

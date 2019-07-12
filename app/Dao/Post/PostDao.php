@@ -31,7 +31,7 @@ class PostDao implements PostDaoInterface
    */
   public function postDetail($post_id)
   {
-    return $post_detail = Post::find($post_id);
+    return $post_detail = Post::findOrFail($post_id);
   }
 
   /**
@@ -55,7 +55,24 @@ class PostDao implements PostDaoInterface
     log::info(count($posts));
       return $posts;
   }
-
+/**
+   * Update Post
+   * @param Object
+   * @return $posts
+   */
+  public function update($user_id, $post)
+  {
+    $update_post = Post::find($post->id);
+    $update_post->title            =  $post->title;
+    $update_post->description      =  $post->desc;
+    $update_post->updated_user_id  =  $user_id;
+    $update_post->updated_at       =  now();
+    $update_post->save();
+    $posts = Post::where('create_user_id', $user_id)
+      ->orderBy('updated_at', 'DESC')
+      ->paginate(5);
+    return $posts;
+  }
   /**
    * Get Posts List
    * @param Object
@@ -97,7 +114,7 @@ class PostDao implements PostDaoInterface
     $delete_post = Post::findOrFail($post_id);
     $delete_post->deleted_user_id = $auth_id;
     $delete_post->deleted_at = now();
-    $delete_post->save();
-    return back();
+    return $delete_post->save();
+    // return back();
   }
 }

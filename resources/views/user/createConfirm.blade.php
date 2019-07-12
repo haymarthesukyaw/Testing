@@ -18,46 +18,49 @@
             </div>
             <form action="/user/create" method="POST">
                 @csrf
+                <input type="hidden" name="filename" value="{{$filename}}">
                 <div class="form-group row">
                     <label for="name" class="col-md-4">Name:</label>
-                    <label class="col-md-6">This is name</label>
-                    <input type="hidden" name="name">
+                    <label class="col-md-6">{{$name}}</label>
+                    <input type="hidden" name="user_name" value="{{$name}}">
                 </div>
 
                 <div class="form-group row">
                     <label for="email" class="col-md-4">Email Address:</label>
-                    <label class="col-md-6">This is email</label>
-                    <input type="hidden" class="form-control" id="email">
+                    <label class="col-md-6">{{$email}}</label>
+                    <input type="hidden" name="email" class="form-control" value="{{$email}}">
                 </div>
 
                 <div class="form-group row">
                     <label for="password" class="col-md-4">Password:</label>
-                    <label class="col-md-6">This is password</label>
-                    <input type="hidden" class="form-control" id="password">
+                    <label class="col-md-6">{{$pwd_hide}}</label>
+                    <input type="hidden" name="password" class="form-control" value="{{$pwd}}">
                 </div>
 
                 <div class="form-group row">
                     <label for="type" class="col-md-4">Type:</label>
-                    <label class="col-md-6">This is type</label>
-                    <input type="hidden" class="form-control" id="type">
+                    @if ($type == null || $type == 1) <label class="border border-dark p-2 col-md-6">User</label>
+                        @else <label class="border border-dark p-2 col-md-6">Admin</label>
+                    @endif
+                    <input type="hidden" name="type" class="form-control" value="{{$type}}">
                 </div>
 
                 <div class="form-group row">
                     <label for="phone" class="col-md-4">Phone:</label>
-                    <label class="col-md-6">This is phone</label>
-                    <input type="hidden" class="form-control" id="phone">
+                    <label class="col-md-6">{{$phone}}</label>
+                    <input type="hidden" name="phone" class="form-control" value="{{$phone}}">
                 </div>
 
                 <div class="form-group row">
                     <label for="dob" class="col-md-4">Date of Birth:</label>
-                    <label class="col-md-6">This is dob</label>
-                    <input type="hidden" class="form-control" id="dob">
+                    <label class="col-md-6">{{date('d-m-Y', strtotime($dob))}}</label>
+                    <input type="hidden" name="dob" class="form-control" value="{{$dob}}">
                 </div>
 
                 <div class="form-group row">
                     <label for="address" class="col-md-4">Address:</label>
-                    <label class="col-md-6">This is address</label>
-                    <input type="hidden" class="form-control" id="address">
+                    <label class="col-md-6">{{$address}}</label>
+                    <input type="hidden" name="address" class="form-control" value="{{$address}}">
                 </div>
 
                 <div class="form-group">
