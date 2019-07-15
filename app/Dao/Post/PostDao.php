@@ -8,6 +8,11 @@ use Log;
 
 class PostDao implements PostDaoInterface
 {
+    protected $post;
+  public function __construct(Post $post)
+  {
+    $this->post=$post;
+  }
   /**
    * Get Posts List
    * @param Object
@@ -51,8 +56,8 @@ class PostDao implements PostDaoInterface
     $posts = Post::where('create_user_id', $auth_id)
       ->orderBy('updated_at', 'DESC')
       ->paginate(5);
-      log::info('count');
-    log::info(count($posts));
+    //   log::info('count');
+    // log::info(count($posts));
       return $posts;
   }
 /**
@@ -109,12 +114,17 @@ class PostDao implements PostDaoInterface
    * @param Object
    * @return $posts
    */
-  public function softDelete($auth_id, $post_id)
-  {
-    $delete_post = Post::findOrFail($post_id);
-    $delete_post->deleted_user_id = $auth_id;
-    $delete_post->deleted_at = now();
-    return $delete_post->save();
-    // return back();
-  }
+//   public function softDelete($auth_id, $post_id)
+//   {
+//     $delete_post = Post::findOrFail($post_id);
+//     $delete_post->deleted_user_id = $auth_id;
+//     $delete_post->deleted_at = now();
+//     $delete_post->save();
+//     return back();
+//   }
+
+    public function softDelete(Post $post)
+    {
+        return $post->delete();
+    }
 }

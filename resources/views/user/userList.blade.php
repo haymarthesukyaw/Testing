@@ -42,32 +42,25 @@
             </tr>
         </thead>
         <tbody>
+            @foreach($users as $key => $user)
             <tr>
-                    <td>User1</td>
-                    <td>user1@gmail.com</td>
-                    <td>User1</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>10/05/2019</td>
-                    <td>10/05/2019</td>
+                    <td><a href="">{{$user->name}}</a></td>
+                    <td>{{$user->email}}</td>
+                    <td>{{$user->created_user_name}}</td>
+                    <td>{{$user->phone}}</td>
+                    <td>{{date('d-m-Y', strtotime($user->dob))}}</td>
+                    <td>{{$user->address}}</td>
+                    <td>{{$user->created_at->format('d-m-y')}}</td>
+                    <td>{{$user->updated_at->format('d-m-y')}}</td>
                     <td><a href="/user/edit">edit</a></td>
                     <td><a href=>delete</a></td>
             </tr>
-            <tr>
-                    <td>User1</td>
-                    <td>user1@gmail.com</td>
-                    <td>User1</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>10/05/2019</td>
-                    <td>10/05/2019</td>
-                    <td>edit</td>
-                    <td>delete</td>
-            </tr>
+            @endforeach
         </tbody>
         </table>
+        <ul class="pagination col-md-12 justify-content-center">
+            {{$users->links()}}
+        </ul>
     </div>
 </div>
 @endsection

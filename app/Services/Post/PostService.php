@@ -2,6 +2,7 @@
 
 namespace App\Services\Post;
 
+use App\Models\Post;
 use App\Contracts\Dao\Post\PostDaoInterface;
 use App\Contracts\Services\Post\PostServiceInterface;
 
@@ -84,8 +85,12 @@ class PostService implements PostServiceInterface
    * @param Object
    * @return $posts
    */
-  public function softDelete($auth_id, $post_id)
+//   public function softDelete($auth_id, $post_id)
+//   {
+//     return $this->postDao->softDelete($auth_id, $post_id);
+//   }
+  public function softDelete(Post $post)
   {
-    return $this->postDao->softDelete($auth_id, $post_id);
+    return $this->postDao->softDelete($post);
   }
 }

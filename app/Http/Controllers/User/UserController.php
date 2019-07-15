@@ -63,7 +63,20 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('user.userList');
+        session()->forget([
+            'name',
+            'email',
+            'type',
+            'phone',
+            'dob',
+            'address',
+            'search_name',
+            'search_email',
+            'search_date_from',
+            'search_date_to'
+        ]);
+        $users = $this->userService->getUser();
+        return view('user.userList', compact('users'));
     }
 
     /**
@@ -150,7 +163,8 @@ class UserController extends Controller
         $user->dob      =  $request->dob;
         $user->address  =  $request->address;
         $user->profile  =  $profile;
-        $insert_user  =  $this->userService->store($auth_id, $user);
+        $users  =  $this->userService->store($auth_id, $user);
+        // return view('user.userList',compact('users'));
         return view('user.userList');
     }
 

@@ -18,7 +18,7 @@
                 <button type="submit" class="btn btn-primary btn-md mb-6 mr-4">Search</button>
                 <a href="/post/create" class="btn btn-primary btn-md mb-6 mr-4">Add</a>
                 <a href="{{url('/csv/upload')}}" class="btn btn-primary btn-md mb-6 mr-4">Upload</a>
-                <a href="/download" class="btn btn-primary btn-md mb-6 mr-4">Download</a>
+                <a href="{{route('export_excel.excel')}}" class="btn btn-primary btn-md mb-6 mr-4">Download</a>
             </div>
             </div>
         </form>
@@ -45,7 +45,7 @@
                     <td>{{$post->created_at->format('d-m-y')}}</td>
                     <td><a href="/post/{{$post->id}}">edit</a></td>
                     <td><a href="#deleteConfirmModal" class="btn btn-danger postDelete" onclick="deleteData({{$post->id}})"
-                           data-toggle="modal">Delete</a></td>
+                           data-toggle="modal" data-id="{{$post->id}}">Delete</a></td>
             </tr>
             @endforeach
         </tbody>
@@ -74,6 +74,45 @@
   </div>
 </div>
 
+<!-- <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure want to delete this post?</p>
+            </div>
+            <div class="modal-footer">
+                <form action="" method="POST" class="deleteForm">
+                    @csrf
+                    @method('DELETE')
+                    <!-- <input type="hidden" id="{{$post->id}}" name="post_id">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-danger" type="submit">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function deleteData(id)
+    {
+        var id = id;
+        var url = "/post/"+id;
+        console.log('url');
+        console.log(url);
+        $(".deleteForm").attr('action', url);
+    }
+    function formSubmit()
+    {
+        $("#deleteConfirmModal").submit();
+    }
+</script> -->
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -83,12 +122,12 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="/posts" method="POST" class="deleteForm">
+            <form action="" method="POST" class="deleteForm">
                 @csrf
                 @method('DELETE')
                 <div class="modal-body">
                     <p>Are you sure want to delete this post?</p>
-                    <input type="hidden" id="post_id" name="post_id" value=>
+                    <!-- <input type="hidden" id="post_id" name="post_id" value=> -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -99,26 +138,28 @@
     </div>
 </div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script type="text/javascript">
+    function deleteData(id)
+    {
+        var id = id;
+        var url = "/post/"+id;
+        console.log('url');
+        console.log(url);
+        $(".deleteForm").attr('action', url);
+    }
+    function formSubmit()
+    {
+        $("#deleteConfirmModal").submit();
+    }
+</script>
+
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src= https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js></script>
 <script type="text/javascript">
     $(document).on('click','.show-modal',function(){
         $('#show').modal('show');
         $('.modal-title').text('show-post');
     });
-</script>
-<!-- <script type="text/javascript">
-    function deleteData(id)
-    {
-        var id = id;
-        var url = "/posts/"+id;
-        console.log(url);
-        $(".deleteForm").attr('action', url);
-    }
+</script> -->
 
-    function formSubmit()
-    {
-        $("#deleteConfirmModal").submit();
-    }
-</script>-->
 @endsection

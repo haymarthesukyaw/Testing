@@ -12,6 +12,10 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Input;
 use DB;
+use Excel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
 
 class PostController extends Controller
 {
@@ -91,7 +95,8 @@ class PostController extends Controller
         $post->title = $request->title;
         $post->desc  = $request->desc;
         $posts   =  $this->postService->store($auth_id, $post);
-        return view('post.postList',compact('posts'))->withSuccess('Post create successfully.');
+        return redirect()->route('posts.index');
+        // return view('post.postList',compact('posts'))->withSuccess('Post create successfully.');
     }
 
     /**
@@ -179,7 +184,8 @@ class PostController extends Controller
         $post->desc   =  $request->desc;
         $posts    =  $this->postService->update($user_id, $post);
         // return view('post.postList', compact('posts'))->withSuccess('Post update successfully.');
-        return redirect()->route('posts.index',compact('posts'))->withSuccess('Post update successfully.');
+        // return redirect()->route('posts.index',compact('posts'))->withSuccess('Post update successfully.');
+        return redirect()->route('posts.index');
     }
 
     /**
@@ -188,17 +194,43 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
-    {
-        $post_id = $request->post_id;
-        $auth_id = Auth::user()->id;
-        $delete_post=$this->postService->softDelete($auth_id, $post_id);
-        // dd($delete_post);
-        return redirect()->route('posts.index');
+    // public function destroy(Request $request)
+    // {
+    //     $post_id = $request->post_id;
+    //     $auth_id = Auth::user()->id;
+    //     $delete_post=$this->postService->softDelete($auth_id, $post_id);
+    //     // dd($delete_post);
+    //     return redirect()->route('posts.index');
 
+    // }
+    public function destroy(Post $post)
+    {
+        $this->postService->softDelete($post);
+        return redirect()->route('posts.index');
     }
     // public function export()
     // {
     //     return Excel::download(new PostsExport, 'posts.xlsx');
+    // }
+
+    // public function excel()
+    // {
+    //     $posts = DB::table('posts')->get()->toArray();
+    //     $posts[]=array('Post Title','Post Description','Posted User','Posted Date');
+    //     foreach($posts as $post){
+    //         $posts_array[]=array(
+    //             'Post Title'    =>  $post->title,
+    //             'Post Description'  =>  $post->description,
+    //             'Posted User'   =>  $post->create_user_id,
+    //             'Posted Date'   =>  $post->created_at
+    //         )
+    //     }
+    //     Excel::create('Posts',function(excel) use ($posts_array){
+    //         $excel->setTitle('Posts');
+    //         $excel->sheet('Posts',function($sheet) use ($posts_array){
+    //             $sheet->fromArray($posts_array,null,'A1',false,false);
+    //         });
+    //     })->download('xlsx');
+
     // }
 }

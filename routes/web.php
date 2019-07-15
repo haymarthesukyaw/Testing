@@ -55,6 +55,10 @@ Route::post('/csv/upload', 'Post\PostController@import');
 //Search
 Route::get('/posts/search', 'Post\PostController@search');
 
-Route::post('/delete', 'Post\PostController@destroy')->name('delete');
+//Post Delete
+Route::delete('/post/{id}', 'Post\PostController@destroy')->name('delete');
 
+//Show Post Modal Detail
 Route::get('/post/show/{id}', 'Post\PostController@show');
+
+Route::get('/export_excel/excel', 'Post\PostController@excel')->name('export_excel.excel');

@@ -28,7 +28,7 @@ class UserDao implements UserDaoInterface
       'u1.name as created_user_name')
       ->join('users as u1', 'u1.id', 'users.create_user_id')
       ->orderBy('users.updated_at', 'DESC')
-      ->paginate(50);
+      ->paginate(5);
     return $users;
   }
 
@@ -52,6 +52,10 @@ class UserDao implements UserDaoInterface
       'updated_user_id' =>  $auth_id
     ]);
     $insert_user->save();
-    return redirect()->back();
+    // return redirect()->back();
+    $users = User::where('create_user_id', $auth_id)
+      ->orderBy('updated_at', 'DESC')
+      ->paginate(5);
+    return $users;
   }
 }
