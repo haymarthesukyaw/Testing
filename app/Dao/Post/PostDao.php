@@ -114,17 +114,11 @@ class PostDao implements PostDaoInterface
    * @param Object
    * @return $posts
    */
-//   public function softDelete($auth_id, $post_id)
-//   {
-//     $delete_post = Post::findOrFail($post_id);
-//     $delete_post->deleted_user_id = $auth_id;
-//     $delete_post->deleted_at = now();
-//     $delete_post->save();
-//     return back();
-//   }
-
-    public function softDelete(Post $post)
+    public function softDelete($auth_id,$post_id)
     {
-        return $post->delete();
+        $delete_post=Post::findOrFail($post_id);
+        $delete_post->deleted_user_id = $auth_id;
+        $delete_post->deleted_at = now();
+        $delete_post->save();
     }
 }

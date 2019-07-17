@@ -16,42 +16,46 @@
                     <img width="100px" height="80px" src="" alt="User-profile" class="img-thumbnail">
                 </div>
             </div>
-            <form action="" method="POST">
+            <form action="/user/{{$user_id}}" method="POST">
                 @csrf
+                <input type="hidden" name="oldProfile" value="{{$old_profile}}">
+                <input type="hidden" name="newProfile" value="{{$user->profile}}">
                 <div class="form-group row">
                     <label class="control-label col-md-4" for="name">Name:</label>
-                    <label class="col-md-6">This is name</label>
-                    <input type="hidden" class="form-control col-md-6" id="name" value="Name">
+                    <label class="col-md-6">{{$user->name}}</label>
+                    <input type="hidden" class="form-control col-md-6" name="name" value="{{$user->name}}">
                 </div>
 
                 <div class="form-group row">
                     <label class="control-label col-md-4" for="email">Email:</label>
-                    <label class="col-md-6">This is email</label>
-                    <input type="hidden" class="form-control col-md-6" id="email">
+                    <label class="col-md-6">{{$user->email}}</label>
+                    <input type="hidden" class="form-control col-md-6" name="email" value="{{$user->email}}">
                 </div>
 
                 <div class="form-group row">
                     <label class="control-label col-md-4" for="type">Type:</label>
-                    <label class="col-md-6">This is type</label>
-                    <input type="hidden" class="form-control col-md-6" id="type">
+                    @if ($user->type == 0) <label class="col-md-6">Admin</label>
+                        @else <label class="col-md-6">User</label>
+                    @endif
+                    <input type="hidden" class="form-control col-md-6" name="type" value="{{$user->type}}">
                 </div>
 
                 <div class="form-group row">
                     <label class="control-label col-md-4" for="phone">Phone:</label>
-                    <label class="col-md-6">This is phone</label>
-                    <input type="hidden" class="form-control col-md-6" id="phone">
+                    <label class="col-md-6">{{$user->phone}}</label>
+                    <input type="hidden" class="form-control col-md-6" name="phone" value="{{$user->phone}}">
                 </div>
 
                 <div class="form-group row">
                     <label class="control-label col-md-4" for="dob">Date of Birth:</label>
-                    <label class="col-md-6">This is dob</label>
-                    <input type="hidden" class="form-control col-md-6" id="dob">
+                    <label class="col-md-6">{{date('d-m-Y', strtotime($user->dob))}}</label>
+                    <input type="hidden" class="form-control col-md-6" name="dob" value="{{$user->dob}}">
                 </div>
 
                 <div class="form-group row">
                     <label class="control-label col-md-4" for="address">Address:</label>
-                    <label class="col-md-6">This is dob</label>
-                    <input type="hidden" class="form-control col-md-6" id="address">
+                    <label class="col-md-6">{{$user->address}}</label>
+                    <input type="hidden" class="form-control col-md-6" name="address" value="{{$user->address}}">
                 </div>
 
                 <div class="form-group">

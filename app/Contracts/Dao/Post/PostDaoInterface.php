@@ -13,6 +13,6 @@ interface PostDaoInterface
   public function store($auth_id, $post);
   public function update($user_id, $post);
   public function searchPost($search_keyword, $auth_id, $auth_type);
-//   public function softDelete($auth_id, $post_id);
-public function softDelete(Post $post);
+  public function softDelete($auth_id, $post_id);
+// public function softDelete($post_id);
 }

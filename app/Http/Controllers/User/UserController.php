@@ -12,7 +12,7 @@ use Validator;
 use Auth;
 use Hash;
 use File;
-
+use Log;
 class UserController extends Controller
 {
     private $userService;
@@ -165,7 +165,7 @@ class UserController extends Controller
         $user->profile  =  $profile;
         $users  =  $this->userService->store($auth_id, $user);
         // return view('user.userList',compact('users'));
-        return view('user.userList');
+        return redirect()->intended('users');
     }
 
     /**
@@ -176,7 +176,28 @@ class UserController extends Controller
      */
     public function search(Request $request)
     {
-
+        $name      = $request->name;
+        $email     = $request->email;
+        $date_from = $request->dateFrom;
+        $date_to   = $request->dateTo;
+        if ($email) {
+            $validator = Validator::make($request->all(), [
+                'email' => 'email'
+            ]);
+            if ($validator->fails()) {
+                return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+            }
+        }
+        session ([
+            'search_name' => $name,
+            'search_email'=> $email,
+            'search_date_from' => $date_from,
+            'search_date_to'   => $date_to
+        ]);
+        $users = $this->userService->searchUser($name, $email, $date_from, $date_to);
+        return view('user.userList', compact('users'));
     }
 
     /**
@@ -201,7 +222,8 @@ class UserController extends Controller
      */
     public function edit($user_id)
     {
-        return view('user.edit');
+        $user_detail = $this->userService->userDetail($user_id);
+        return view('user.edit',compact('user_detail'));
     }
 
     /**
@@ -213,7 +235,37 @@ class UserController extends Controller
      */
     public function editConfirm(Request $request, $user_id)
     {
-        return view('user.update');
+        $user = User::find($user_id);
+        $email = $request->email;
+        $validator = Validator::make($request->all(), [
+            'user_name' =>  'required',
+            'email'     =>  'required|email|unique:users,email,' . $user->id,
+            'phone'     =>  'required|numeric|digits_between:6,20',
+            'address'   =>  'max:255',
+            'profile_photo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+        $user   =   new User;
+        $user->name    =  $request->user_name;
+        $user->email   =  $request->email;
+        $user->type    =  $request->type;
+        $user->phone   =  $request->phone;
+        $user->dob     =  $request->dob;
+        $user->address =  $request->address;
+        $new_profile   =  $request->file('profile_photo');
+        $old_profile   =  $request->oldProfile;
+
+        //tempory save new profile photo
+        if ($new_profile) {
+            $file_name = $new_profile->getClientOriginalName();
+            $new_profile->move('img/tempProfile', $file_name);
+            $user->profile = $file_name;
+        }
+        return view('user.update', compact('user', 'old_profile', 'user_id'));
     }
 
     /**
@@ -225,7 +277,27 @@ class UserController extends Controller
      */
     public function update(Request $request, $user_id)
     {
-        return view('user.userList');
+        $auth_id = Auth::user()->id;
+        $user   = new User;
+        $user->id      =  $user_id;
+        $user->name    =  $request->name;
+        $user->email   =  $request->email;
+        $user->type    =  $request->type;
+        $user->phone   =  $request->phone;
+        $user->dob     =  $request->dob;
+        $user->address =  $request->address;
+        $new_profile   =  $request->newProfile;
+        $old_profile   =  $request->oldProfile;
+        if ($new_profile) {
+            $oldpath = public_path() . '/img/tempProfile/' . $new_profile;
+            $newpath = public_path() . '/img/profile/' . $new_profile;
+            File::move($oldpath, $newpath);
+            $user->profile = '/img/profile/' . $new_profile;
+        } else {
+            $user->profile = $old_profile;
+        }
+        $update_user  =  $this->userService->update($auth_id, $user);
+        return redirect()->intended('users');
     }
 
     /**
@@ -259,6 +331,9 @@ class UserController extends Controller
      */
     public function destroy(Request $request)
     {
-
+        $user_id = $request->user_id;
+        $auth_id = Auth::user()->id;
+        $delete_user = $this->userService->softDelete($auth_id, $user_id);
+        return redirect()->intended('users');
     }
 }

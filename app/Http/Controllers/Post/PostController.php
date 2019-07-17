@@ -16,6 +16,7 @@ use Excel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
+use Log;
 
 class PostController extends Controller
 {
@@ -122,18 +123,28 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    // public function show($post_id)
+    // {
+    //     $post = Post::findOrFail($post_id);
+    //     $title=$post->title;
+    //     $desc=$post->description;
+    //     // $user = User::where('id', '=', $post->create_user_id)
+    //     //     ->select('name')
+    //     //     ->first();
+    //     // return response()->json(['post' => $post]);
+    //     // return view('post.postList',compact('title','desc'));
+    //     return view('post.postList')->with('post', json_decode($post, true));
+    //     // return json_decode($post, true);
+    // }
     public function show($post_id)
     {
         $post = Post::findOrFail($post_id);
-        $title=$post->title;
-        $desc=$post->description;
+        log::info($post_id);
         // $user = User::where('id', '=', $post->create_user_id)
         //     ->select('name')
         //     ->first();
-        // return response()->json(['post' => $post]);
-        // return view('post.postList',compact('title','desc'));
-        return view('post.postList')->with('post', json_decode($post, true));
-        // return json_decode($post, true);
+        // return response()->json(['post' => $post, 'user' => $user]);
+        return view('post.postList',compact('title','desc'));
     }
 
     /**
@@ -194,20 +205,15 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    // public function destroy(Request $request)
-    // {
-    //     $post_id = $request->post_id;
-    //     $auth_id = Auth::user()->id;
-    //     $delete_post=$this->postService->softDelete($auth_id, $post_id);
-    //     // dd($delete_post);
-    //     return redirect()->route('posts.index');
-
-    // }
-    public function destroy(Post $post)
+    public function destroy(Request $request)
     {
-        $this->postService->softDelete($post);
+        $post_id = $request->post_id;
+        $auth_id = Auth::user()->id;
+        $delete_post=$this->postService->softDelete($auth_id, $post_id);
         return redirect()->route('posts.index');
+
     }
+
     // public function export()
     // {
     //     return Excel::download(new PostsExport, 'posts.xlsx');

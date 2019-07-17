@@ -10,14 +10,14 @@
     </div>
 
     <div class="row justify-content-center">
-        <form action="/posts/search" method="GET" class="form-inline">
+        <form action="/search" method="POST" class="form-inline">
         @csrf
             <div class="form-group mb-2">
             <div class="pb-4">
-                <input type="text" name="name" value="{{session('searchKeyword')}}" class="form-control form-control-md mb-6 mr-4" placeholder="Name">
-                <input type="text" name="email" value="{{session('searchKeyword')}}" class="form-control form-control-md mb-6 mr-4" placeholder="Email">
-                <input type="text" name="createdFrom" value="{{session('searchKeyword')}}" class="form-control form-control-md mb-6 mr-4" placeholder="CreatedFrom">
-                <input type="text" name="createdTo" value="{{session('searchKeyword')}}" class="form-control form-control-md mb-6 mr-4" placeholder="CreatedTo">
+                <input type="text" name="name" value="{{session('search_name')}}" class="form-control mb-6 mr-4" placeholder="Name">
+                <input type="text" name="email" value="{{session('search_email')}}" class="form-control mb-6 mr-4" placeholder="Email">
+                <input type="text" name="dateFrom" value="{{session('search_date_from')}}" onfocus="(this.type='date')" onblur="if(this.value==''){this.type='text'}" class="form-control mb-6 mr-4" placeholder="Created From">
+                <input type="text" name="dateTo" value="{{session('search_date_to')}}" onfocus="(this.type='date')" onblur="if(this.value==''){this.type='text'}" class="form-control mb-6 mr-4" placeholder="Created To">
                 <button type="submit" class="btn btn-primary btn-md mb-6 mr-4">Search</button>
                 <a href="/user/create" class="btn btn-primary btn-md mb-6 mr-4">Add</a>
             </div>
@@ -52,8 +52,9 @@
                     <td>{{$user->address}}</td>
                     <td>{{$user->created_at->format('d-m-y')}}</td>
                     <td>{{$user->updated_at->format('d-m-y')}}</td>
-                    <td><a href="/user/edit">edit</a></td>
-                    <td><a href=>delete</a></td>
+                    <td><a href="/user/{{$user->id}}">edit</a></td>
+                    <td><a href="#deleteConfirmModal" class="btn btn-danger userDelete"
+                            data-toggle="modal" data-id="{{$user->id}}">Delete</a></td>
             </tr>
             @endforeach
         </tbody>
@@ -61,6 +62,31 @@
         <ul class="pagination col-md-12 justify-content-center">
             {{$users->links()}}
         </ul>
+    </div>
+
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Delete Confirmation</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure want to delete this post?</p>
+                </div>
+                <div class="modal-footer">
+                    <form action="/user" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <input type="hidden" id="user_id" name="user_id">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button class="btn btn-danger" type="submit">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @endsection

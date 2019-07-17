@@ -85,12 +85,12 @@ class PostService implements PostServiceInterface
    * @param Object
    * @return $posts
    */
-//   public function softDelete($auth_id, $post_id)
-//   {
-//     return $this->postDao->softDelete($auth_id, $post_id);
-//   }
-  public function softDelete(Post $post)
+  public function softDelete($auth_id, $post_id)
   {
-    return $this->postDao->softDelete($post);
+    return $this->postDao->softDelete($auth_id, $post_id);
   }
+//   public function softDelete($post_id)
+//   {
+//     return $this->postDao->softDelete($post_id);
+//   }
 }

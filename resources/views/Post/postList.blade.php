@@ -39,13 +39,17 @@
         <tbody>
             @foreach($posts as $key => $post)
             <tr>
-                    <td><a href="#" class="show-modal btn btn-link" data-toggle="modal" data-target="#show" data-id="{{$post->id}}" data-title="{{$post->title}}" data-body="{{$post->description}}">{{$post->title}}</button></td>
+            <form action="/show/{{$post->id}}" method="POST">
+                @csrf
+                    <td><button class="show-modal btn btn-link" data-target="#show" onclick="showData({{$post->id}})" data-toggle="modal">{{$post->title}}</button></td>
                     <td>{{$post->description}}</td>
+                    <input type="hidden" id="post_id" name="post_id" class="showpostID" value="">
+            </form>
                     <td>{{$post->user->name}}</td>
                     <td>{{$post->created_at->format('d-m-y')}}</td>
                     <td><a href="/post/{{$post->id}}">edit</a></td>
                     <td><a href="#deleteConfirmModal" class="btn btn-danger postDelete" onclick="deleteData({{$post->id}})"
-                           data-toggle="modal" data-id="{{$post->id}}">Delete</a></td>
+                           data-toggle="modal">Delete</a></td>
             </tr>
             @endforeach
         </tbody>
@@ -55,16 +59,19 @@
         </ul>
     </div>
 </div>
-
+<form action="" method="POST">
 <div class="modal fade" id="show" role="dialog">
     <div class="modal-dialog" role="document" >
       <div class="modal-content">
         <div class="modal-header">
-            <h4 class="modal-title" id="post-title">{{$post->title}}</h4>
+            <h4 class="modal-title" id="post-title"></h4>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <div class="modal-body">
-          {{$post->description}}
+            <!-- <p class="font-italic text-sm" id="posted-date"></p>
+            <div id="post-desc"></div>
+            <p class="font-italic text-sm-right" id="posted-user"></p> -->
+            <p></p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -73,46 +80,8 @@
     </div>
   </div>
 </div>
+</form>
 
-<!-- <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Delete Confirmation</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure want to delete this post?</p>
-            </div>
-            <div class="modal-footer">
-                <form action="" method="POST" class="deleteForm">
-                    @csrf
-                    @method('DELETE')
-                    <!-- <input type="hidden" id="{{$post->id}}" name="post_id">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-danger" type="submit">Delete</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script type="text/javascript">
-    function deleteData(id)
-    {
-        var id = id;
-        var url = "/post/"+id;
-        console.log('url');
-        console.log(url);
-        $(".deleteForm").attr('action', url);
-    }
-    function formSubmit()
-    {
-        $("#deleteConfirmModal").submit();
-    }
-</script> -->
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -127,7 +96,7 @@
                 @method('DELETE')
                 <div class="modal-body">
                     <p>Are you sure want to delete this post?</p>
-                    <!-- <input type="hidden" id="post_id" name="post_id" value=> -->
+                    <input type="hidden" id="post_id" name="post_id" class="postID" value="">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -146,6 +115,13 @@
         console.log('url');
         console.log(url);
         $(".deleteForm").attr('action', url);
+        $(".postID").attr('value',id);
+    }
+    function showData(id)
+    {
+        var id=id;
+        $(".showpostID").attr('value',id);
+
     }
     function formSubmit()
     {

@@ -52,13 +52,20 @@ Route::post('/profile','User\UserController@showProfileEdit');
 Route::get('/csv/upload', 'Post\PostController@showUploadForm');
 Route::post('/csv/upload', 'Post\PostController@import');
 
-//Search
+//Post Search
 Route::get('/posts/search', 'Post\PostController@search');
 
 //Post Delete
-Route::delete('/post/{id}', 'Post\PostController@destroy')->name('delete');
+Route::delete('/post/{id}', 'Post\PostController@destroy');
 
 //Show Post Modal Detail
-Route::get('/post/show/{id}', 'Post\PostController@show');
+Route::post('/show/{id}', 'Post\PostController@show');
 
 Route::get('/export_excel/excel', 'Post\PostController@excel')->name('export_excel.excel');
+
+//User Delete
+Route::post('/user', 'User\UserController@destroy');
+
+//User Search
+Route::post('/search','User\UserController@search')->name('search');
+
