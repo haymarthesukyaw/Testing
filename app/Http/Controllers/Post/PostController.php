@@ -13,9 +13,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Input;
 use DB;
 use Excel;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-use PhpOffice\PhpSpreadsheet\Writer\Xls;
+use App\Exports\ExportPosts;
 use Log;
 
 class PostController extends Controller
@@ -32,19 +30,35 @@ class PostController extends Controller
         $this->postService = $post;
     }
 
-    public function createForm()
-    {
-        return view('post.create');
-    }
-
+    //CSV File Upload
     public function showUploadForm()
     {
         return view('post.upload');
     }
-    public function import()
+    public function import(Request $request)
     {
-        return view('post.postList');
+        $auth_id   = Auth::user()->id;
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|max:2048'
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
+        }
+        $file = $request->file('file');
+        //validate type of file
+        $extension = $file->getClientOriginalExtension();
+        if ($extension != 'csv') {
+            return redirect()->back()->withInvalid('The file must be a file of type: csv.');
+        }
+        //upload csv file
+        $fileName = $file->getClientOriginalName();
+        $file->move('upload', $fileName);
+        $filepath = public_path() . '/upload/' . $fileName;
+
+        $import_csv_file = $this->postService->import($auth_id, $filepath);
+        return redirect()->route('postList');
     }
+    //Get Posts
     public function index()
     {
         $auth_id = Auth::user()->id;
@@ -57,7 +71,11 @@ class PostController extends Controller
         $posts = $this->postService->getPost($auth_id, $type);
         return view('post.postList',compact('posts'));
     }
-
+    //Post Create Form
+    public function createForm()
+    {
+        return view('post.create');
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -123,29 +141,14 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    // public function show($post_id)
-    // {
-    //     $post = Post::findOrFail($post_id);
-    //     $title=$post->title;
-    //     $desc=$post->description;
-    //     // $user = User::where('id', '=', $post->create_user_id)
-    //     //     ->select('name')
-    //     //     ->first();
-    //     // return response()->json(['post' => $post]);
-    //     // return view('post.postList',compact('title','desc'));
-    //     return view('post.postList')->with('post', json_decode($post, true));
-    //     // return json_decode($post, true);
-    // }
-    public function show($post_id)
+    public function show(Request $request)
     {
-        $post = Post::findOrFail($post_id);
-        log::info($post_id);
-        // $user = User::where('id', '=', $post->create_user_id)
-        //     ->select('name')
-        //     ->first();
-        // return response()->json(['post' => $post, 'user' => $user]);
-        return view('post.postList',compact('title','desc'));
+        $post = Post::findOrFail($request->id);
+        $title=$post->title;
+        $desc=$post->description;
+        return response()->json(array('title'=>$title,'desc'=>$desc));
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -173,9 +176,6 @@ class PostController extends Controller
                         ->withErrors($validator)
                         ->withInput();
         }
-        // dd($title);
-        // dd($desc);
-        // dd($id);
         return view('post.update',compact('title','desc','id'));
 
     }
@@ -194,8 +194,6 @@ class PostController extends Controller
         $post->title  =  $request->title;
         $post->desc   =  $request->desc;
         $posts    =  $this->postService->update($user_id, $post);
-        // return view('post.postList', compact('posts'))->withSuccess('Post update successfully.');
-        // return redirect()->route('posts.index',compact('posts'))->withSuccess('Post update successfully.');
         return redirect()->route('posts.index');
     }
 
@@ -214,29 +212,8 @@ class PostController extends Controller
 
     }
 
-    // public function export()
-    // {
-    //     return Excel::download(new PostsExport, 'posts.xlsx');
-    // }
-
-    // public function excel()
-    // {
-    //     $posts = DB::table('posts')->get()->toArray();
-    //     $posts[]=array('Post Title','Post Description','Posted User','Posted Date');
-    //     foreach($posts as $post){
-    //         $posts_array[]=array(
-    //             'Post Title'    =>  $post->title,
-    //             'Post Description'  =>  $post->description,
-    //             'Posted User'   =>  $post->create_user_id,
-    //             'Posted Date'   =>  $post->created_at
-    //         )
-    //     }
-    //     Excel::create('Posts',function(excel) use ($posts_array){
-    //         $excel->setTitle('Posts');
-    //         $excel->sheet('Posts',function($sheet) use ($posts_array){
-    //             $sheet->fromArray($posts_array,null,'A1',false,false);
-    //         });
-    //     })->download('xlsx');
-
-    // }
+    public function export()
+    {
+        return Excel::download(new ExportPosts, 'posts.xlsx');
+    }
 }

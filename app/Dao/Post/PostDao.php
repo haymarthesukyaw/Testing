@@ -30,7 +30,7 @@ class PostDao implements PostDaoInterface
     return $posts;
   }
   /**
-   * Get Post detail
+   * Edit post
    * @param Object
    * @return $postDetail
    */
@@ -120,5 +120,22 @@ class PostDao implements PostDaoInterface
         $delete_post->deleted_user_id = $auth_id;
         $delete_post->deleted_at = now();
         $delete_post->save();
+        return back();
+    }
+
+    public function import($auth_id, $filepath)
+    {
+        if (($handle = fopen($filepath, 'r')) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, ',')) !== FALSE ) {
+                $post = new Post;
+                $post->title = $data [0];
+                $post->description     = $data [1];
+                $post->create_user_id  = $auth_id;
+                $post->updated_user_id = $auth_id;
+                $post->save ();
+            }
+            fclose($handle);
+        }
+        return back();
     }
 }

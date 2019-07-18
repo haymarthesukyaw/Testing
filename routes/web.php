@@ -30,6 +30,22 @@ Route::get('/post/{id}','Post\PostController@edit');
 Route::put('/post/{id}', 'Post\PostController@editConfirm')->name('posts.edit');
 Route::post('/post/{id}','Post\PostController@update')->name('posts.update');
 
+//Post Search
+Route::get('/posts/search', 'Post\PostController@search');
+
+//Post Delete
+Route::delete('/post/{id}', 'Post\PostController@destroy');
+
+//Export Excel
+Route::get('/download','Post\PostController@export');
+
+//Import Excel
+Route::get('/csv/upload', 'Post\PostController@showUploadForm');
+Route::post('/csv/upload', 'Post\PostController@import');
+
+//Show Post Modal Detail
+Route::post('/showPost', 'Post\PostController@show');
+
 //User
 Route::get('/users','User\UserController@index')->name('index');
 //User Create
@@ -48,20 +64,6 @@ Route::post('/changePwd','User\UserController@changePassword');
 //Show Profile
 Route::get('/profile', 'User\UserController@showProfile')->name('profile');
 Route::post('/profile','User\UserController@showProfileEdit');
-//Upload CSV
-Route::get('/csv/upload', 'Post\PostController@showUploadForm');
-Route::post('/csv/upload', 'Post\PostController@import');
-
-//Post Search
-Route::get('/posts/search', 'Post\PostController@search');
-
-//Post Delete
-Route::delete('/post/{id}', 'Post\PostController@destroy');
-
-//Show Post Modal Detail
-Route::post('/show/{id}', 'Post\PostController@show');
-
-Route::get('/export_excel/excel', 'Post\PostController@excel')->name('export_excel.excel');
 
 //User Delete
 Route::post('/user', 'User\UserController@destroy');
