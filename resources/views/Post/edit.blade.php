@@ -34,10 +34,6 @@
                         <input type="checkbox" id="status" name="status" class="form-check-input col-md-1">
                     </div>
                 </div>
-                <!-- <input type="hidden" name="create_user_id" value="{{Auth::user()->id}}"> -->
-                <!-- <input type="hidden" name="updated_user_id" value="{{Auth::user()->id}}"> -->
-                <!-- <input type="hidden" name="deleted_user_id" value="{{Auth::user()->id}}"> -->
-
                 <div class="form-group">
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary mr-4">Confirm</button>

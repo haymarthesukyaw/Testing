@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers\Post;
-
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Contracts\Services\Post\PostServiceInterface;
@@ -14,8 +12,8 @@ use Illuminate\Support\Facades\Input;
 use DB;
 use Excel;
 use App\Exports\ExportPosts;
+use App\Imports\ImportPosts;
 use Log;
-
 class PostController extends Controller
 {
     /**
@@ -24,40 +22,64 @@ class PostController extends Controller
      * @return \Illuminate\Http\Response
      */
     private $postService;
-
     public function __construct(PostServiceInterface $post)
     {
         $this->postService = $post;
     }
-
-    //CSV File Upload
+    //Excel Upload Form
     public function showUploadForm()
     {
         return view('post.upload');
     }
+
+    //Excel Import Form
+    // public function import(Request $request)
+    // {
+    //     $auth_id   = Auth::user()->id;
+    //     $validator = Validator::make($request->all(), [
+    //         'file' => 'required|max:2048'
+    //     ]);
+    //     if ($validator->fails()) {
+    //         return redirect()->back()->withErrors($validator);
+    //     }
+    //     $file = $request->file('file');
+    //     //validate type of file
+    //     $extension = $file->getClientOriginalExtension();
+    //     if ($extension != 'csv') {
+    //         return redirect()->back()->withInvalid('The file must be a file of type: csv.');
+    //     }
+    //     //upload csv file
+    //     $fileName = $file->getClientOriginalName();
+    //     $file->move('upload', $fileName);
+    //     $filepath = public_path() . '/upload/' . $fileName;
+    //     $import_csv_file = $this->postService->import($auth_id, $filepath);
+    //     return redirect()->route('posts.index');
+    // }
+
+    //Excel Import Form
     public function import(Request $request)
     {
-        $auth_id   = Auth::user()->id;
         $validator = Validator::make($request->all(), [
             'file' => 'required|max:2048'
         ]);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator);
         }
-        $file = $request->file('file');
-        //validate type of file
+        $file=$request->file('file');
         $extension = $file->getClientOriginalExtension();
         if ($extension != 'csv') {
             return redirect()->back()->withInvalid('The file must be a file of type: csv.');
         }
-        //upload csv file
-        $fileName = $file->getClientOriginalName();
-        $file->move('upload', $fileName);
-        $filepath = public_path() . '/upload/' . $fileName;
-
-        $import_csv_file = $this->postService->import($auth_id, $filepath);
-        return redirect()->route('postList');
+        Excel::import(new ImportPosts, $file);
+        return redirect()->route('posts.index');
     }
+
+    //Excel Export
+    public function export()
+    {
+        return Excel::download(new ExportPosts, 'posts.xlsx');
+    }
+
     //Get Posts
     public function index()
     {
@@ -100,7 +122,6 @@ class PostController extends Controller
         ]);
         return view('post.createConfirm',compact('title','desc'));
     }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -117,7 +138,6 @@ class PostController extends Controller
         return redirect()->route('posts.index');
         // return view('post.postList',compact('posts'))->withSuccess('Post create successfully.');
     }
-
     /**
      * Display the specified resource.
      *
@@ -148,8 +168,6 @@ class PostController extends Controller
         $desc=$post->description;
         return response()->json(array('title'=>$title,'desc'=>$desc));
     }
-
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -161,7 +179,6 @@ class PostController extends Controller
         $post = $this->postService->postDetail($id);
         return view('post.edit',compact('post'));
     }
-
     public function editConfirm(Request $request, $id)
     {
         $post   =   Post::find($id);
@@ -177,7 +194,6 @@ class PostController extends Controller
                         ->withInput();
         }
         return view('post.update',compact('title','desc','id'));
-
     }
     /**
      * Update the specified resource in storage.
@@ -196,7 +212,6 @@ class PostController extends Controller
         $posts    =  $this->postService->update($user_id, $post);
         return redirect()->route('posts.index');
     }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -209,11 +224,5 @@ class PostController extends Controller
         $auth_id = Auth::user()->id;
         $delete_post=$this->postService->softDelete($auth_id, $post_id);
         return redirect()->route('posts.index');
-
-    }
-
-    public function export()
-    {
-        return Excel::download(new ExportPosts, 'posts.xlsx');
     }
 }
