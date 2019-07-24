@@ -50,7 +50,7 @@
                             </li>
                         @else
                             <li class="nav-item">
-                                <a class="nav-link" href="/profile">User</a>
+                                <a class="nav-link" href="/profile/{{Auth::user()->id}}">User</a>
                             </li>
                         @endif
                         <li class="nav-item">

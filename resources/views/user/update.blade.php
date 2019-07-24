@@ -13,7 +13,7 @@
         <div class="col-md-6 mx-auto">
             <div class="col-md-8  mx-auto">
                 <div class="text-center mb-4">
-                    <img width="100px" height="80px" src="" alt="User-profile" class="img-thumbnail">
+                    <img width="100px" height="80px" alt="User-profile" class="img-thumbnail" src="@if($user->profile)/img/tempProfile/{{$user->profile}} @else {{$old_profile}} @endif">
                 </div>
             </div>
             <form action="/user/{{$user_id}}" method="POST">

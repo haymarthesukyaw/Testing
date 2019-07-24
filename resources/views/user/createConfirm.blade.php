@@ -13,7 +13,7 @@
         <div class="col-md-6 mx-auto">
             <div class="col-md-8  mx-auto">
                 <div class="text-center mb-4">
-                    <img width="100px" height="80px" src="" alt="User-profile" class="img-thumbnail col-md-6">
+                    <img width="100px" height="80px" src="/img/tempProfile/{{$filename}}" alt="User-profile" class="img-thumbnail col-md-6">
                 </div>
             </div>
             <form action="/user/create" method="POST">

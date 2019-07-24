@@ -184,7 +184,6 @@ class UserDao implements UserDaoInterface
     $user_delete->deleted_user_id = $auth_id;
     $user_delete->deleted_at = now();
     $user_delete->save();
-
     $postDelete = Post::where('create_user_id', '=', $user_id)
       ->update([
         'deleted_user_id' => $auth_id,

@@ -85,19 +85,21 @@ class PostController extends Controller
     {
         $auth_id = Auth::user()->id;
         $type    = Auth::user()->type;
-        session()->forget([
-            'searchKeyword',
-            'title',
-            'desc'
-        ]);
+        // session()->forget([
+        //     'searchKeyword',
+        //     'title',
+        //     'desc'
+        // ]);
         $posts = $this->postService->getPost($auth_id, $type);
         return view('post.postList',compact('posts'));
     }
+
     //Post Create Form
     public function createForm()
     {
         return view('post.create');
     }
+
     /**
      * Show the form for creating a new resource.
      *

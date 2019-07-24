@@ -12,7 +12,7 @@
         <div class="col-md-6 mx-auto">
             <div class="col-md-8 mx-auto">
                 <div class="text-center mb-4">
-                    <img width="100px" height="80px" src="" alt="User-profile" class="img-thumbnail">
+                    <img width="100px" height="80px" src="{{$user_detail->profile}}" alt="User-profile" class="img-thumbnail">
                 </div>
             </div>
 
@@ -78,7 +78,7 @@
                 </div>
                 <div class="form-group row">
                     <!-- <a href="{{route('password',['id' => 1])}}" class="btn btn-link form-control col-md-3">Change Password</a> -->
-                    <a href="{{url('/changePwd')}}" class="btn btn-link form-control col-md-3">Change Password</a>
+                    <a href="/changePwd/{{$user_detail->id}}" class="btn btn-link form-control col-md-3">Change Password</a>
                 </div>
                 <div class="form-group">
                     <div class="text-center">

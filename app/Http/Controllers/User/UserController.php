@@ -48,13 +48,6 @@ class UserController extends Controller
         Auth::logout();
         return redirect('/');
     }
-    /**
-     * Show user register form.
-     */
-    public function createForm()
-    {
-        return view('user.create');
-    }
 
     /**
      * Display a listing of the resource.
@@ -80,6 +73,14 @@ class UserController extends Controller
     }
 
     /**
+     * Show user register form.
+     */
+    public function createForm()
+    {
+        return view('user.create');
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -87,7 +88,7 @@ class UserController extends Controller
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'user_name'  =>  'required',
+            'user_name'  => 'required',
             'email'     =>  'required|email|unique:users,email',
             'password'  =>  'required|min:8|confirmed|regex:/^(?=.*?[0-9]).{8,}$/',
             'password_confirmation' => 'required|min:8|regex:/^(?=.*?[0-9]).{8,}$/',
@@ -109,10 +110,9 @@ class UserController extends Controller
         $address =  $request->address;
         $profile_img = $request->file('profileImg');
 
-        //password show as ***
         $hide = "*";
         $pwd_hide = str_pad($hide, strlen($pwd), "*");
-        //tempory save profile photo
+
         $filename = "";
         if ($profile_img) {
             $filename = $profile_img->getClientOriginalName();
@@ -206,14 +206,12 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function showProfile()
+    public function showProfile($user_id)
     {
-        return view('user.userProfile');
+        $user_profile=$this->userService->userDetail($user_id);
+        return view('user.userProfile',compact('user_profile'));
     }
-    public function showProfileEdit()
-    {
-        return view('user.edit');
-    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -297,7 +295,14 @@ class UserController extends Controller
             $user->profile = $old_profile;
         }
         $update_user  =  $this->userService->update($auth_id, $user);
-        return redirect()->intended('users');
+        if(Auth::user()->type == '0')
+        {
+            return redirect()->intended('users');
+        }
+        else
+        {
+            return redirect()->intended('posts');
+        }
     }
 
     /**
@@ -306,9 +311,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function changePwdForm()
+    public function changePwdForm($user_id)
     {
-        return view('user.changePwd');
+        return view('user.changePwd',compact('user_id'));
     }
 
     /**
@@ -318,9 +323,31 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function changePassword()
+    public function changePassword(Request $request,$user_id)
     {
-        return view('user.userList');
+        $validator=Validator::make($request->all(),[
+            'old_password' => 'required|min:8|regex:/^(?=.*?[0-9]).{8,}$/',
+            'password'     => 'required|min:8|confirmed|regex:/^(?=.*?[0-9]).{8,}$/',
+            'password_confirmation' => 'required|min:8|regex:/^(?=.*?[0-9]).{8,}$/'
+        ]);
+        if($validator->fails()) {
+            return redirect()->back()
+                            ->withErrors($validator)
+                            ->withInput();
+        }
+        $old_pwd    =   $request->old_password;
+        $new_pwd    =   $request->password;
+        $auth_id    =   Auth::user()->id;
+        $auth_type  =   Auth::user()->type;
+        $status =   $this->userService->changePassword($auth_id, $user_id, $old_pwd, $new_pwd);
+        if ($status) {
+            // if ($auth_type == '0') {
+                return redirect()->route('posts.index');
+            // }
+        }
+        else {
+            return redirect()->back()->with('incorrect', 'Old password does not match.');
+        }
     }
 
     /**
@@ -334,6 +361,14 @@ class UserController extends Controller
         $user_id = $request->user_id;
         $auth_id = Auth::user()->id;
         $delete_user = $this->userService->softDelete($auth_id, $user_id);
-        return redirect()->intended('users');
+        return redirect()->route('index');
+    }
+
+    public function show(Request $request)
+    {
+        $user = User::findOrFail($request->id);
+        $name=$user->name;
+        $email=$user->email;
+        return response()->json(array('name'=>$name, 'email'=>$email));
     }
 }

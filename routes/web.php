@@ -43,7 +43,7 @@ Route::get('/download','Post\PostController@export');
 Route::get('/csv/upload', 'Post\PostController@showUploadForm');
 Route::post('/csv/upload', 'Post\PostController@import');
 
-//Show Post Modal Detail
+//Show Post Detail Modal
 Route::post('/showPost', 'Post\PostController@show');
 
 //User
@@ -58,16 +58,17 @@ Route::put('/user/{id}','User\UserController@editConfirm');
 Route::post('/user/{id}','User\UserController@update');
 
 //Change Password
-Route::get('/changePwd','User\UserController@changePwdForm')->name('password');
-Route::post('/changePwd','User\UserController@changePassword');
+Route::get('/changePwd/{id}','User\UserController@changePwdForm')->name('password');
+Route::post('/changePwd/{id}','User\UserController@changePassword');
 
-//Show Profile
-Route::get('/profile', 'User\UserController@showProfile')->name('profile');
-Route::post('/profile','User\UserController@showProfileEdit');
+//Show User Profile
+Route::get('/profile/{id}', 'User\UserController@showProfile')->name('profile');
 
 //User Delete
-Route::post('/user', 'User\UserController@destroy');
+Route::delete('/user/{id}', 'User\UserController@destroy');
 
 //User Search
 Route::post('/search','User\UserController@search')->name('search');
 
+//User Detail Modal
+Route::post('/showUser','User\UserController@show');

@@ -65,15 +65,16 @@
             <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <div class="modal-body">
-            <p class="postTitle"></p>
-            <p class="postDesc"></p>
+            <label class="col-md-3">Title:</label>
+            <label class="postTitle col-md-6"></label>
+            <label class="col-md-3">Description:</label>
+            <label class="postDesc col-md-6"></label>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
-  </div>
 </div>
 
 <!-- Post Delete Modal -->
