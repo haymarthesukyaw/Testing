@@ -14,7 +14,7 @@
         @csrf
             <div class="form-group mb-2">
             <div class="pb-4">
-                <input type="text" name="search" value="{{session('searchKeyword')}}" class="form-control form-control-md mb-6 mr-4" placeholder="Search...">
+                <input type="text" name="search" class="form-control form-control-md mb-6 mr-4" placeholder="Search...">
                 <button type="submit" class="btn btn-primary btn-md mb-6 mr-4">Search</button>
                 <a href="/post/create" class="btn btn-primary btn-md mb-6 mr-4">Add</a>
                 <a href="{{url('/csv/upload')}}" class="btn btn-primary btn-md mb-6 mr-4">Upload</a>

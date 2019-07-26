@@ -66,59 +66,116 @@ class UserDao implements UserDaoInterface
    */
   public function searchUser($name, $email, $date_from, $date_to)
   {
+    //All Null
     if ($name == null && $email == null && $date_from == null && $date_to == null) {
-      $users = User::select(
-        'users.name',
-        'users.email',
-        'users.phone',
-        'users.dob',
-        'users.address',
-        'users.created_at',
-        'users.updated_at',
-        'users.id',
-        'u1.name as created_user_name')
-        ->join('users as u1', 'u1.id', 'users.create_user_id')
-        ->orderBy('users.updated_at', 'DESC')
-        ->paginate(5);
-    } else {
+        $users = User::select(
+          'users.name',
+          'users.email',
+          'users.phone',
+          'users.dob',
+          'users.address',
+          'users.created_at',
+          'users.updated_at',
+          'u1.name as created_user_name')
+          ->join('users as u1', 'u1.id', 'u1.create_user_id')
+          ->orderBy('users.updated_at', 'DESC')
+          ->paginate(5);
+      }
+    else {
+        //Name OR Email And Date Null
         if ((isset($name) || isset($email)) &&
             (is_null($date_from) && is_null($date_to))) {
                 $users = User::select(
-                  'users.name',
-                  'users.email',
-                  'users.phone',
-                  'users.dob',
-                  'users.address',
-                  'users.created_at',
-                  'users.updated_at',
-                  'users.id',
-                  'u1.name as created_user_name')
-                  ->where('users.name', 'LIKE', '%' . $name . '%')
-                  ->where('users.email', 'LIKE', '%' . $email . '%')
-                  ->join('users as u1', 'u1.id', 'users.create_user_id')
-                  ->orderBy('users.updated_at', 'DESC')
-                  ->paginate(5);
-        } elseif ((isset($name) || isset($email)) ||
+                    'users.name',
+                    'users.email',
+                    'users.phone',
+                    'users.dob',
+                    'users.address',
+                    'users.created_at',
+                    'users.updated_at',
+                    'u1.name as created_user_name')
+                    ->where('users.name', 'LIKE', '%' . $name . '%')
+                    ->where('users.email', 'LIKE', '%' . $email . '%')
+                    ->join('users as u1', 'u1.id', 'u1.create_user_id')
+                    ->orderBy('users.updated_at', 'DESC')
+                    ->paginate(5);
+        }
+        //Name OR Email OR Date
+        elseif ((isset($name) || isset($email)) ||
             (isset($date_from) && isset($date_to))) {
                 $users = User::select(
-                  'users.name',
-                  'users.email',
-                  'users.phone',
-                  'users.dob',
-                  'users.address',
-                  'users.created_at',
-                  'users.updated_at',
-                  'users.id',
-                  'u1.name as created_user_name')
-                  ->join('users as u1', 'u1.id', 'users.create_user_id')
-                  ->where('users.name', 'LIKE', '%' . $name . '%')
-                  ->where('users.email', 'LIKE', '%' . $email . '%')
-                  ->whereBetween('users.created_at', array($date_from, $date_to))
-                  ->orderBy('users.updated_at', 'DESC')
-                  ->paginate(5);
+                    'users.name',
+                    'users.email',
+                    'users.phone',
+                    'users.dob',
+                    'users.address',
+                    'users.created_at',
+                    'users.updated_at',
+                    'users.id',
+                    'u1.name as created_user_name')
+                    ->join('users as u1', 'u1.id', 'users.create_user_id')
+                    ->where('users.name', 'LIKE', '%' . $name . '%')
+                    ->where('users.email', 'LIKE', '%' . $email . '%')
+                    ->where('users.created_at', '>=', $date_from)
+                    ->where('users.created_at', '<=',$date_to)
+                    ->orderBy('users.updated_at', 'DESC')
+                    ->paginate(5);
         }
     }
-    return $users;
+      return $users;
+    // if ($name == null && $email == null && $date_from == null && $date_to == null) {
+    //   $users = User::select(
+    //     'users.name',
+    //     'users.email',
+    //     'users.phone',
+    //     'users.dob',
+    //     'users.address',
+    //     'users.created_at',
+    //     'users.updated_at',
+    //     'users.id',
+    //     'u1.name as created_user_name')
+    //     ->join('users as u1', 'u1.id', 'users.create_user_id')
+    //     ->orderBy('users.updated_at', 'DESC')
+    //     ->paginate(5);
+    // } else {
+    //     if ((isset($name) || isset($email)) &&
+    //         (is_null($date_from) && is_null($date_to))) {
+    //             $users = User::select(
+    //               'users.name',
+    //               'users.email',
+    //               'users.phone',
+    //               'users.dob',
+    //               'users.address',
+    //               'users.created_at',
+    //               'users.updated_at',
+    //               'users.id',
+    //               'u1.name as created_user_name')
+    //               ->where('users.name', 'LIKE', '%' . $name . '%')
+    //               ->where('users.email', 'LIKE', '%' . $email . '%')
+    //               ->join('users as u1', 'u1.id', 'users.create_user_id')
+    //               ->orderBy('users.updated_at', 'DESC')
+    //               ->paginate(5);
+    //     } elseif ((isset($name) || isset($email)) ||
+    //         (isset($date_from) && isset($date_to))) {
+    //             $users = User::select(
+    //               'users.name',
+    //               'users.email',
+    //               'users.phone',
+    //               'users.dob',
+    //               'users.address',
+    //               'users.created_at',
+    //               'users.updated_at',
+    //               'users.id',
+    //               'u1.name as created_user_name')
+    //               ->join('users as u1', 'u1.id', 'users.create_user_id')
+    //               ->where('users.name', 'LIKE', '%' . $name . '%')
+    //               ->where('users.email', 'LIKE', '%' . $email . '%')
+    //               ->whereBetween('users.created_at', array($date_from, $date_to))
+    //               ->orderBy('users.updated_at', 'DESC')
+    //               ->paginate(5);
+    //     }
+    // }
+    // return $users;
   }
 
   /**
@@ -163,14 +220,34 @@ class UserDao implements UserDaoInterface
   public function changePassword($auth_id, $user_id, $old_pwd, $new_pwd)
   {
     $update_user = User::find($user_id);
-    $status = Hash::check($old_pwd, $update_user->password);
-    if ($status) {
-        $update_user->password   = Hash::make($new_pwd);
-        $update_user->updated_user_id = $auth_id;
-        $update_user->updated_at = now();
-        $update_user->save();
-    }
-    return $status;
+    $update_user->password   = Hash::make($new_pwd);
+    $update_user->updated_user_id = $auth_id;
+    $update_user->updated_at = now();
+    $update_user->save();
+    return redirect()->back();
+    // $status = Hash::check($old_pwd, $update_user->password);
+    // $status1= strcmp($old_pwd,$new_pwd);
+    // if ($status1 == 0) {
+    //     $status="ERROR";
+
+    // }
+    // else{
+    //     if ($status) {
+    //         $update_user->password   = Hash::make($new_pwd);
+    //         $update_user->updated_user_id = $auth_id;
+    //         $update_user->updated_at = now();
+    //         $update_user->save();
+    //     }
+    // return $status;
+    // }
+    // $status = Hash::check($old_pwd, $update_user->password);
+    // if ($status) {
+        // $update_user->password   = Hash::make($new_pwd);
+        // $update_user->updated_user_id = $auth_id;
+        // $update_user->updated_at = now();
+        // $update_user->save();
+    // }
+    // return $status;
   }
 
   /**

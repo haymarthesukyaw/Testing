@@ -10,7 +10,7 @@
     </div>
 
     <div class="row justify-content-center">
-        <form action="/search" method="POST" class="form-inline">
+        <form action="/users/search" method="GET" class="form-inline">
         @csrf
             <div class="form-group mb-2">
             <div class="pb-4">

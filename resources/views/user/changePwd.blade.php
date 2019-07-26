@@ -11,10 +11,9 @@
 
     <div class="row">
         <div class="col-md-7 mx-auto">
-            @if(Session::has('incorrect'))
+            @if(Session::has('error'))
                 <div class="alert alert-dismissible alert-warning  alertmessage text-danger">
-                    <strong>Incorrect Password!</strong>
-                    <p class="alert {{Session::get('alert-class', 'alert-danger')}} ">{{ Session::get('incorrect')}}</p>
+                    <p class="alert {{Session::get('alert-class', 'alert-danger')}} ">{{ Session::get('error')}}</p>
                     <button class="close" type="button" data-dismiss="alert" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

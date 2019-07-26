@@ -21,6 +21,10 @@ class UserController extends Controller
     {
         $this->userService = $user;
     }
+    public function showLoginForm()
+    {
+        return view('auth.login');
+    }
     public function login(Request $request)
     {
         $email      =   $request->email;
@@ -45,8 +49,8 @@ class UserController extends Controller
 
     public function logout()
     {
-        Auth::logout();
-        return redirect('/');
+        // Auth::logout();
+        return redirect('/login');
     }
 
     /**
@@ -182,7 +186,9 @@ class UserController extends Controller
         $date_to   = $request->dateTo;
         if ($email) {
             $validator = Validator::make($request->all(), [
-                'email' => 'email'
+                'email' => 'email',
+                'date_from' => 'date',
+                'date_to' => 'date|after:date_from'
             ]);
             if ($validator->fails()) {
                 return redirect()->back()
@@ -328,7 +334,7 @@ class UserController extends Controller
         $validator=Validator::make($request->all(),[
             'old_password' => 'required|min:8|regex:/^(?=.*?[0-9]).{8,}$/',
             'password'     => 'required|min:8|confirmed|regex:/^(?=.*?[0-9]).{8,}$/',
-            'password_confirmation' => 'required|min:8|regex:/^(?=.*?[0-9]).{8,}$/'
+            'password_confirmation' => 'required|same:password'
         ]);
         if($validator->fails()) {
             return redirect()->back()
@@ -339,15 +345,21 @@ class UserController extends Controller
         $new_pwd    =   $request->password;
         $auth_id    =   Auth::user()->id;
         $auth_type  =   Auth::user()->type;
+        if (!(Hash::check($old_pwd, Auth::user()->password))) {
+            return redirect()->back()->with("error","Your current password does not matches with the password you provided.");
+
+        }
+        if(strcmp($old_pwd, $new_pwd) == 0) {
+            return redirect()->back()->with("error","New Password cannot be same as current password. Please choose a different password.");
+        }
         $status =   $this->userService->changePassword($auth_id, $user_id, $old_pwd, $new_pwd);
-        if ($status) {
-            // if ($auth_type == '0') {
-                return redirect()->route('posts.index');
-            // }
-        }
-        else {
-            return redirect()->back()->with('incorrect', 'Old password does not match.');
-        }
+        return redirect()->route('posts.index');
+        // if ($status) {
+        //         return redirect()->route('posts.index');
+        // }
+        // else {
+        //     return redirect()->back()->with('incorrect', 'Old password does not match.');
+        // }
     }
 
     /**

@@ -84,25 +84,29 @@ class PostDao implements PostDaoInterface
    */
   public function searchPost($search_keyword, $auth_id, $auth_type)
   {
-    if ($auth_type == 0) {
-      if ($search_keyword == null) {
-        $posts = Post::orderBy('updated_at', 'DESC')->paginate(5);
-      } else {
-          $posts = Post::where('title', 'LIKE', '%' . $search_keyword . '%')
-            ->orwhere('description', 'LIKE', '%' . $search_keyword . '%')
-            ->orderBy('updated_at', 'DESC')
-            ->paginate(5);
-      }
-    } else {
+    if ($auth_type == '0') {
         if ($search_keyword == null) {
-          $posts = Post::where('create_user_id', '=', $auth_id)
-            ->orderBy('updated_at', 'DESC')->paginate(5);
+            $posts = Post::orderBy('updated_at', 'DESC')->paginate(5);
         } else {
             $posts = Post::where('title', 'LIKE', '%' . $search_keyword . '%')
-              ->orwhere('description', 'LIKE', '%' . $search_keyword . '%')
-              ->where('create_user_id', '=', $auth_id)
-              ->orderBy('updated_at', 'DESC')
+                ->orwhere('description', 'LIKE', '%' . $search_keyword . '%')
+                ->orderBy('updated_at', 'DESC')
+                ->paginate(5);
+        }
+    }
+    else
+    {
+        if ($search_keyword == null) {
+            $posts = Post::where('create_user_id', '=', $auth_id)
+                ->orderBy('updated_at', 'DESC')->paginate(5);
+        } else {
+            $posts=Post::where(function ($query) use ($search_keyword){
+                $query->where('title', 'LIKE', '%' . $search_keyword . '%')
+                      ->orwhere('description', 'LIKE', '%' . $search_keyword . '%');
+            })->where('create_user_id', '=',$auth_id)
+              ->orderBy('updated_at','DESC')
               ->paginate(5);
+
         }
     }
     return $posts;
